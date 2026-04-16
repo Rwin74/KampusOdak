@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Server, Users, Key, AlertTriangle, Terminal, Zap, Plus, LogOut, Activity, Network, Building } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area, CartesianGrid } from "recharts";
 
-type Profile = { id: string; email: string; full_name: string; total_hours: number; streak: number; role: string; created_at: string; org_id?: string };
+type Profile = { id: string; email: string; full_name: string; total_hours: number; streak: number; role: string; created_at: string; org_id?: string; dershane_id?: string };
 type Invite = { code: string; created_by: string; used_by: string | null; is_active: boolean; created_at: string };
 type Log = { id: string; event_type: string; description: string; user_id: string; created_at: string };
 type OrgStats = { org_id: string; org_name: string; total_hours: number; student_count: number };

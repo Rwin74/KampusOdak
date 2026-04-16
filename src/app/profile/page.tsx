@@ -73,7 +73,7 @@ export default function ProfilePage() {
           className="flex items-center space-x-2 text-muted-foreground hover:text-white transition-colors mb-8"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span>Dashboard'a Dön</span>
+          <span>Dashboard&apos;a Dön</span>
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

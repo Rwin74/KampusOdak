@@ -94,9 +94,8 @@ export default function Dashboard() {
         router.push(`/room/${roomFound}?duration=${selectedDuration}&category=${selectedCategory}`);
       }, 2000); 
       return () => clearTimeout(timer);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomFound, router]);
 
   const handleTriviaAnswer = async (answer: string) => {

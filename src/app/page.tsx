@@ -52,10 +52,6 @@ export default function Home() {
           return;
         }
 
-        const invite = inviteList[0];
-
-        // Davetiyeyi kim oluşturdu?
-        const { data: creator } = await supabase.from('profiles').select('role, id').eq('id', invite.created_by).single();
 
         // Davetiye geçerli, hesabı oluşturalım
         const { data: authData, error: authError } = await supabase.auth.signUp({
