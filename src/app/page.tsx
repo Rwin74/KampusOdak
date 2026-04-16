@@ -8,6 +8,8 @@ import { Lock, ArrowRight, ShieldCheck, Zap, Users } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   const router = useRouter();
   const [inviteCode, setInviteCode] = useState("");

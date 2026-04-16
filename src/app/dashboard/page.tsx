@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Timer, Flame, Target, BookOpen, Clock, Loader2, Award, Star, User, Building } from "lucide-react";
+import { LogOut, Timer, Flame, Target, BookOpen, Clock, Loader2, Award, Star, User, Building, ExternalLink } from "lucide-react";
+
+export const dynamic = 'force-dynamic';
 
 type Profile = { id: string; full_name: string; total_hours: number; streak: number; xp?: number; role?: string };
 type Trivia = { id: number; category: string; question: string; options: string[]; correct_answer: string };
+type BilgiKosesi = { id: string; baslik: string; icerik: string; kategori: string; created_at: string };
+type Haberler = { id: string; baslik: string; icerik: string; link?: string; kategori: string; created_at: string };
 
 export default function Dashboard() {
   const router = useRouter();
@@ -19,6 +23,8 @@ export default function Dashboard() {
   const [currentTriviaIndex, setCurrentTriviaIndex] = useState(0);
   const [triviaFeedback, setTriviaFeedback] = useState<"correct" | "incorrect" | null>(null);
   const [roomFound, setRoomFound] = useState<string | null>(null);
+  const [bilgiler, setBilgiler] = useState<BilgiKosesi[]>([]);
+  const [haberler, setHaberler] = useState<Haberler[]>([]);
 
   // Fetch initial profile data
   useEffect(() => {
@@ -35,12 +41,35 @@ export default function Dashboard() {
         router.push("/");
         return;
       }
-      
+
       setProfile(data);
       supabase.rpc('leave_pool', { p_user_id: data.id }).then();
     };
     fetchUser();
   }, [router]);
+
+  // Fetch Bilgi Köşesi and Haberler
+  useEffect(() => {
+    const fetchContent = async () => {
+      const { data: bilgiData } = await supabase
+        .from("bilgi_kosesi")
+        .select("*")
+        .eq("aktif", true)
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      const { data: haberData } = await supabase
+        .from("haberler")
+        .select("*")
+        .eq("aktif", true)
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      if (bilgiData) setBilgiler(bilgiData);
+      if (haberData) setHaberler(haberData);
+    };
+    fetchContent();
+  }, []);
 
   // Matchmaking Polling
   useEffect(() => {
@@ -119,7 +148,7 @@ export default function Dashboard() {
   if (!profile) return <div className="min-h-screen bg-black flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden flex flex-col">
+    <div className="min-h-screen bg-black text-white relative overflow-y-auto flex flex-col">
       {/* Background Ambience */}
       <div className="absolute top-0 w-full h-96 bg-primary/10 rounded-b-full filter blur-[100px] pointer-events-none" />
 
@@ -158,11 +187,11 @@ export default function Dashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center p-6 relative z-10">
+      <main className="flex-1 flex flex-col items-center justify-center p-6 relative z-10">
         <AnimatePresence mode="wait">
           {!matchmaking ? (
             // STANDBY STATE
-            <motion.div key="standby" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -20 }} className="max-w-md w-full glass-panel rounded-3xl p-8 shadow-2xl">
+            <motion.div key="standby" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -20 }} className="max-w-md w-full glass-panel rounded-3xl p-8 shadow-2xl mb-12">
               <div className="text-center mb-6">
                 <h2 className="text-2xl font-semibold mb-2">Hoş geldin, {profile.full_name || 'Öğrenci'}</h2>
                 <p className="text-muted-foreground text-sm">Hedefini ve pomodoro süreni seç.</p>
@@ -170,7 +199,7 @@ export default function Dashboard() {
 
               <div className="grid grid-cols-3 gap-2 mb-4">
                 {["YKS", "KPSS", "Üniversite"].map((cat) => (
-                  <button 
+                  <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
                     className={`py-3 rounded-xl text-center font-medium transition-all text-sm ${selectedCategory === cat ? "bg-primary/20 border-primary shadow-[inset_0_0_20px_rgba(139,92,246,0.1)] text-primary border" : "bg-white/5 border-transparent text-muted-foreground border hover:bg-white/10 hover:text-white"}`}
@@ -182,7 +211,7 @@ export default function Dashboard() {
 
               <div className="grid grid-cols-2 gap-2 mb-8">
                 {[25, 50].map((dur) => (
-                  <button 
+                  <button
                     key={dur} onClick={() => setSelectedDuration(dur)}
                     className={`p-3 rounded-xl text-center font-medium transition-all flex items-center justify-center space-x-2 text-sm ${selectedDuration === dur ? "bg-accent/20 border-accent shadow-[inset_0_0_20px_rgba(236,72,153,0.1)] text-accent border" : "bg-white/5 border-transparent text-muted-foreground border hover:bg-white/10 hover:text-white"}`}
                   >
@@ -191,7 +220,7 @@ export default function Dashboard() {
                 ))}
               </div>
 
-              <button 
+              <button
                 onClick={startMatchmaking}
                 className="w-full py-5 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white rounded-2xl font-bold text-lg transition-all shadow-lg shadow-primary/20 flex items-center justify-center space-x-2 relative group overflow-hidden"
               >
@@ -202,14 +231,14 @@ export default function Dashboard() {
             </motion.div>
           ) : (
             // MATCHMAKING & TRIVIA STATE
-            <motion.div 
-              key="matchmaking" 
-              initial={{ opacity: 0, scale: 0.9 }} 
-              animate={{ opacity: 1, scale: roomFound ? 1.2 : 1, filter: roomFound ? "blur(4px)" : "blur(0px)" }} 
+            <motion.div
+              key="matchmaking"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: roomFound ? 1.2 : 1, filter: roomFound ? "blur(4px)" : "blur(0px)" }}
               transition={{ duration: 0.8, ease: "easeInOut" }}
-              className={`max-w-xl w-full text-center space-y-8`}
+              className={`max-w-xl w-full text-center space-y-8 mb-12`}
             >
-              
+
               <div className="flex flex-col items-center justify-center space-y-4 mb-12">
                 <div className="relative">
                   <div className={`w-20 h-20 rounded-full border-2 border-primary/20 border-t-primary animate-spin ${roomFound ? "!border-green-500 !border-t-green-500" : ""}`} />
@@ -234,8 +263,8 @@ export default function Dashboard() {
                   <h3 className="text-lg text-white mb-6 leading-relaxed">{triviaList[currentTriviaIndex].question}</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {triviaList[currentTriviaIndex].options.map((opt, i) => (
-                      <button 
-                        key={i} 
+                      <button
+                        key={i}
                         onClick={() => handleTriviaAnswer(opt)}
                         disabled={triviaFeedback !== null}
                         className="bg-white/5 hover:bg-white/10 border border-white/10 text-white p-3 rounded-lg text-sm text-left transition-colors"
@@ -253,6 +282,71 @@ export default function Dashboard() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Bilgi Köşesi Section */}
+        {bilgiler.length > 0 && (
+          <section className="w-full max-w-4xl mt-8 space-y-4">
+            <div className="flex items-center space-x-2 mb-6">
+              <BookOpen className="w-6 h-6 text-primary" />
+              <h2 className="text-2xl font-bold">Bilgi Köşesi</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {bilgiler.map((bilgi) => (
+                <motion.div
+                  key={bilgi.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="glass-panel p-6 rounded-2xl border border-white/10 hover:border-primary/30 transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="text-xs font-medium text-accent uppercase tracking-wider">{bilgi.kategori}</span>
+                    <span className="text-xs text-muted-foreground">{new Date(bilgi.created_at).toLocaleDateString('tr-TR')}</span>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2 text-white">{bilgi.baslik}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{bilgi.icerik}</p>
+                </motion.div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Haberler Section */}
+        {haberler.length > 0 && (
+          <section className="w-full max-w-4xl mt-12 space-y-4 pb-12">
+            <div className="flex items-center space-x-2 mb-6">
+              <Target className="w-6 h-6 text-accent" />
+              <h2 className="text-2xl font-bold">Okul & Sınav Haberleri</h2>
+            </div>
+            <div className="space-y-4">
+              {haberler.map((haber) => (
+                <motion.div
+                  key={haber.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="glass-panel p-6 rounded-2xl border border-white/10 hover:border-accent/30 transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="text-xs font-medium text-primary uppercase tracking-wider">{haber.kategori}</span>
+                    <span className="text-xs text-muted-foreground">{new Date(haber.created_at).toLocaleDateString('tr-TR')}</span>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2 text-white">{haber.baslik}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-3">{haber.icerik}</p>
+                  {haber.link && (
+                    <a
+                      href={haber.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-sm text-accent hover:text-accent/80 transition-colors"
+                    >
+                      Detaylar için tıklayın
+                      <ExternalLink className="w-4 h-4 ml-1" />
+                    </a>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );

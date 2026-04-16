@@ -5,19 +5,23 @@ import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Server, Users, Key, AlertTriangle, Terminal, Zap, Plus, LogOut, Activity, Network, Building } from "lucide-react";
+import { Server, Users, Key, AlertTriangle, Terminal, Zap, Plus, LogOut, Activity, Network, Building, BookOpen, Newspaper } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area, CartesianGrid } from "recharts";
+
+export const dynamic = 'force-dynamic';
 
 type Profile = { id: string; email: string; full_name: string; total_hours: number; streak: number; role: string; created_at: string; org_id?: string; dershane_id?: string };
 type Invite = { code: string; created_by: string; used_by: string | null; is_active: boolean; created_at: string };
 type Log = { id: string; event_type: string; description: string; user_id: string; created_at: string };
 type OrgStats = { org_id: string; org_name: string; total_hours: number; student_count: number };
 type ChurnStat = { user_id: string; full_name: string; churn_count: number; total_hours: number };
+type BilgiKonesi = { id: string; baslik: string; icerik: string; kategori: string; aktif: boolean; created_at: string; updated_at: string };
+type Haberler = { id: string; baslik: string; icerik: string; link?: string; kategori: string; aktif: boolean; created_at: string; updated_at: string };
 
 export default function AdminDashboard() {
   const router = useRouter();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [activeTab, setActiveTab] = useState<"analytics" | "invites" | "users" | "logs" | "tree">("analytics");
+  const [activeTab, setActiveTab] = useState<"analytics" | "invites" | "users" | "logs" | "tree" | "content">("analytics");
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
 
   // Data states
@@ -26,6 +30,8 @@ export default function AdminDashboard() {
   const [logs, setLogs] = useState<Log[]>([]);
   const [orgStats, setOrgStats] = useState<OrgStats[]>([]);
   const [churnStats, setChurnStats] = useState<ChurnStat[]>([]);
+  const [bilgiler, setBilgiler] = useState<BilgiKonesi[]>([]);
+  const [haberler, setHaberler] = useState<Haberler[]>([]);
 
   // Check auth
   useEffect(() => {
@@ -84,6 +90,13 @@ export default function AdminDashboard() {
 
     const { data: churnData } = await supabase.from("vw_user_churn").select("*").order("churn_count", { ascending: false }).limit(10);
     if (churnData) setChurnStats(churnData as ChurnStat[]);
+
+    // Fetch Bilgi Köşesi and Haberler
+    const { data: bilgiData } = await supabase.from("bilgi_kosesi").select("*").order("created_at", { ascending: false });
+    if (bilgiData) setBilgiler(bilgiData as BilgiKonesi[]);
+
+    const { data: haberData } = await supabase.from("haberler").select("*").order("created_at", { ascending: false });
+    if (haberData) setHaberler(haberData as Haberler[]);
   };
 
   if (isAdmin === null) return <div className="min-h-screen bg-black flex items-center justify-center text-primary"><Zap className="w-12 h-12 animate-pulse" /></div>;
@@ -101,7 +114,8 @@ export default function AdminDashboard() {
           <TabButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")} icon={<Activity className="w-5 h-5"/>} label="Derin Analitik" />
           <TabButton active={activeTab === "users"} onClick={() => setActiveTab("users")} icon={<Users className="w-5 h-5"/>} label="Kullanıcı Radarı" />
           <TabButton active={activeTab === "invites"} onClick={() => setActiveTab("invites")} icon={<Key className="w-5 h-5"/>} label="Davetiyeler" />
-          
+          <TabButton active={activeTab === "content"} onClick={() => setActiveTab("content")} icon={<Newspaper className="w-5 h-5"/>} label="İçerik Yönetimi" />
+
           {userProfile?.role === 'admin' && (
             <>
               <TabButton active={activeTab === "tree"} onClick={() => setActiveTab("tree")} icon={<Network className="w-5 h-5"/>} label="Davetiye Ağacı" />
@@ -112,7 +126,10 @@ export default function AdminDashboard() {
 
         <div className="mt-auto pt-8 border-t border-white/10">
           <div className="text-xs text-muted-foreground mb-4 break-words">Yetkili: {userProfile?.email}</div>
-          <button onClick={async () => { await supabase.auth.signOut(); router.push("/"); }} className="flex items-center justify-center space-x-2 text-black bg-white hover:bg-gray-200 w-full p-3 rounded-lg font-bold transition-colors text-sm">
+          <button onClick={async () => { 
+            await supabase.auth.signOut();
+            router.push("/"); 
+          }} className="flex items-center justify-center space-x-2 text-black bg-white hover:bg-gray-200 w-full p-3 rounded-lg font-bold transition-colors text-sm">
             <LogOut className="w-4 h-4" />
             <span>Sistemi Kapat</span>
           </button>
@@ -128,6 +145,7 @@ export default function AdminDashboard() {
           {activeTab === "analytics" && <AnalyticsPanel key="analytics" orgStats={orgStats} churnStats={churnStats} />}
           {activeTab === "invites" && <InvitesPanel key="invites" invites={invites} refreshData={fetchData} userProfile={userProfile} />}
           {activeTab === "users" && <UsersPanel key="users" profiles={profiles} refreshData={fetchData} userProfile={userProfile} />}
+          {activeTab === "content" && <ContentPanel key="content" bilgiler={bilgiler} haberler={haberler} refreshData={fetchData} />}
           {activeTab === "logs" && userProfile?.role === 'admin' && <LogsPanel key="logs" logs={logs} />}
           {activeTab === "tree" && userProfile?.role === 'admin' && <InviteTreePanel key="tree" invites={invites} profiles={profiles} />}
         </AnimatePresence>
@@ -454,5 +472,297 @@ function LogsPanel({ logs }: { logs: Log[] }) {
         ))}
       </div>
     </motion.div>
+  );
+}
+
+// ==========================================
+// 6. İÇERİK YÖNETİMİ (Bilgi Köşesi & Haberler)
+// ==========================================
+function ContentPanel({ bilgiler, haberler, refreshData }: { bilgiler: BilgiKonesi[], haberler: Haberler[], refreshData: () => void }) {
+  const [activeSection, setActiveSection] = useState<"bilgi" | "haber">("bilgi");
+  const [editingItem, setEditingItem] = useState<BilgiKonesi | Haberler | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  const handleAdd = async (data: any, type: "bilgi" | "haber") => {
+    const table = type === "bilgi" ? "bilgi_kosesi" : "haberler";
+    const { error } = await supabase.from(table).insert(data);
+    if (error) {
+      alert("Hata: " + error.message);
+    } else {
+      await refreshData();
+      setShowAddForm(false);
+    }
+  };
+
+  const handleUpdate = async (id: string, data: any, type: "bilgi" | "haber") => {
+    const table = type === "bilgi" ? "bilgi_kosesi" : "haberler";
+    const { error } = await supabase.from(table).update(data).eq("id", id);
+    if (error) {
+      alert("Hata: " + error.message);
+    } else {
+      await refreshData();
+      setEditingItem(null);
+    }
+  };
+
+  const handleDelete = async (id: string, type: "bilgi" | "haber") => {
+    if (!confirm("Bu içeriği silmek istediğinizden emin misiniz?")) return;
+    const table = type === "bilgi" ? "bilgi_kosesi" : "haberler";
+    const { error } = await supabase.from(table).delete().eq("id", id);
+    if (error) {
+      alert("Hata: " + error.message);
+    } else {
+      await refreshData();
+    }
+  };
+
+  const handleToggleActive = async (id: string, currentStatus: boolean, type: "bilgi" | "haber") => {
+    const table = type === "bilgi" ? "bilgi_kosesi" : "haberler";
+    const { error } = await supabase.from(table).update({ aktif: !currentStatus }).eq("id", id);
+    if (error) {
+      alert("Hata: " + error.message);
+    } else {
+      await refreshData();
+    }
+  };
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold flex items-center space-x-2"><Newspaper className="w-6 h-6 text-accent"/> <span>İçerik Yönetimi</span></h2>
+        <p className="text-muted-foreground text-sm mt-1">Bilgi Köşesi ve Haberler içeriklerini buradan yönetebilirsiniz.</p>
+      </div>
+
+      {/* Section Toggle */}
+      <div className="flex space-x-2 mb-6">
+        <button
+          onClick={() => { setActiveSection("bilgi"); setShowAddForm(false); setEditingItem(null); }}
+          className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${activeSection === "bilgi" ? "bg-primary/20 text-primary border border-primary/50" : "bg-white/5 text-muted-foreground hover:bg-white/10"}`}
+        >
+          <BookOpen className="w-5 h-5" />
+          <span>Bilgi Köşesi</span>
+        </button>
+        <button
+          onClick={() => { setActiveSection("haber"); setShowAddForm(false); setEditingItem(null); }}
+          className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${activeSection === "haber" ? "bg-accent/20 text-accent border border-accent/50" : "bg-white/5 text-muted-foreground hover:bg-white/10"}`}
+        >
+          <Newspaper className="w-5 h-5" />
+          <span>Haberler</span>
+        </button>
+      </div>
+
+      {/* Add Button */}
+      <button
+        onClick={() => setShowAddForm(true)}
+        className="flex items-center space-x-2 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white px-4 py-2 rounded-lg font-medium transition-all"
+      >
+        <Plus className="w-5 h-5" />
+        <span>Yeni {activeSection === "bilgi" ? "Bilgi" : "Haber"} Ekle</span>
+      </button>
+
+      {/* Add Form */}
+      {showAddForm && (
+        <ContentForm
+          type={activeSection}
+          onSave={(data) => handleAdd(data, activeSection)}
+          onCancel={() => setShowAddForm(false)}
+        />
+      )}
+
+      {/* Edit Form */}
+      {editingItem && (
+        <ContentForm
+          type={activeSection}
+          item={editingItem}
+          onSave={(data) => handleUpdate(editingItem.id, data, activeSection)}
+          onCancel={() => setEditingItem(null)}
+        />
+      )}
+
+      {/* Content List */}
+      <div className="space-y-4">
+        {activeSection === "bilgi" ? (
+          bilgiler.map((bilgi) => (
+            <ContentCard
+              key={bilgi.id}
+              item={bilgi}
+              type="bilgi"
+              onEdit={() => setEditingItem(bilgi)}
+              onDelete={() => handleDelete(bilgi.id, "bilgi")}
+              onToggleActive={() => handleToggleActive(bilgi.id, bilgi.aktif, "bilgi")}
+            />
+          ))
+        ) : (
+          haberler.map((haber) => (
+            <ContentCard
+              key={haber.id}
+              item={haber}
+              type="haber"
+              onEdit={() => setEditingItem(haber)}
+              onDelete={() => handleDelete(haber.id, "haber")}
+              onToggleActive={() => handleToggleActive(haber.id, haber.aktif, "haber")}
+            />
+          ))
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+function ContentForm({ type, item, onSave, onCancel }: { type: "bilgi" | "haber", item?: BilgiKonesi | Haberler, onSave: (data: any) => void, onCancel: () => void }) {
+  const [formData, setFormData] = useState({
+    baslik: item?.baslik || "",
+    icerik: item?.icerik || "",
+    kategori: item?.kategori || "genel",
+    link: type === "haber" ? (item as Haberler)?.link || "" : "",
+    aktif: item?.aktif !== undefined ? item.aktif : true
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const data: any = {
+      baslik: formData.baslik,
+      icerik: formData.icerik,
+      kategori: formData.kategori,
+      aktif: formData.aktif
+    };
+    if (type === "haber" && formData.link) {
+      data.link = formData.link;
+    }
+    onSave(data);
+  };
+
+  return (
+    <div className="bg-white/5 border border-white/10 p-6 rounded-2xl">
+      <h3 className="text-lg font-bold mb-4">{item ? "Düzenle" : "Yeni Ekle"}</h3>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium mb-2">Başlık</label>
+          <input
+            type="text"
+            value={formData.baslik}
+            onChange={(e) => setFormData({ ...formData, baslik: e.target.value })}
+            className="w-full bg-black/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">İçerik</label>
+          <textarea
+            value={formData.icerik}
+            onChange={(e) => setFormData({ ...formData, icerik: e.target.value })}
+            className="w-full bg-black/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary min-h-[100px]"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Kategori</label>
+          <select
+            value={formData.kategori}
+            onChange={(e) => setFormData({ ...formData, kategori: e.target.value })}
+            className="w-full bg-black/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary"
+          >
+            <option value="genel">Genel</option>
+            <option value="ytks">YKS</option>
+            <option value="kpss">KPSS</option>
+            <option value="universite">Üniversite</option>
+            <option value="okul">Okul</option>
+            <option value="sinav">Sınav</option>
+            <option value="duyuru">Duyuru</option>
+          </select>
+        </div>
+        {type === "haber" && (
+          <div>
+            <label className="block text-sm font-medium mb-2">Link (Opsiyonel)</label>
+            <input
+              type="text"
+              value={formData.link}
+              onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+              className="w-full bg-black/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary"
+              placeholder="https://..."
+            />
+          </div>
+        )}
+        <div className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            id="aktif"
+            checked={formData.aktif}
+            onChange={(e) => setFormData({ ...formData, aktif: e.target.checked })}
+            className="w-4 h-4 rounded"
+          />
+          <label htmlFor="aktif" className="text-sm font-medium">Aktif</label>
+        </div>
+        <div className="flex space-x-2">
+          <button
+            type="submit"
+            className="bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          >
+            Kaydet
+          </button>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          >
+            İptal
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function ContentCard({ item, type, onEdit, onDelete, onToggleActive }: { item: BilgiKonesi | Haberler, type: "bilgi" | "haber", onEdit: () => void, onDelete: () => void, onToggleActive: () => void }) {
+  const isHaber = type === "haber";
+  const haber = item as Haberler;
+
+  return (
+    <div className={`bg-white/5 border ${item.aktif ? "border-white/10" : "border-red-500/30"} p-6 rounded-2xl hover:bg-white/10 transition-colors`}>
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex-1">
+          <div className="flex items-center space-x-2 mb-2">
+            <span className={`text-xs font-medium uppercase tracking-wider px-2 py-1 rounded ${isHaber ? "bg-accent/20 text-accent" : "bg-primary/20 text-primary"}`}>
+              {item.kategori}
+            </span>
+            {!item.aktif && (
+              <span className="text-xs font-medium text-red-400">Pasif</span>
+            )}
+          </div>
+          <h3 className="text-lg font-semibold text-white mb-2">{item.baslik}</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">{item.icerik}</p>
+          {isHaber && haber.link && (
+            <a href={haber.link} target="_blank" rel="noopener noreferrer" className="text-sm text-accent hover:text-accent/80 mt-2 inline-block">
+              {haber.link}
+            </a>
+          )}
+        </div>
+      </div>
+      <div className="flex items-center justify-between pt-4 border-t border-white/10">
+        <span className="text-xs text-muted-foreground">
+          {new Date(item.created_at).toLocaleDateString('tr-TR')}
+        </span>
+        <div className="flex space-x-2">
+          <button
+            onClick={onToggleActive}
+            className={`text-xs px-3 py-1 rounded ${item.aktif ? "text-yellow-400 hover:text-yellow-300" : "text-green-400 hover:text-green-300"} transition-colors`}
+          >
+            {item.aktif ? "Pasife Al" : "Aktife Al"}
+          </button>
+          <button
+            onClick={onEdit}
+            className="text-xs px-3 py-1 rounded text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            Düzenle
+          </button>
+          <button
+            onClick={onDelete}
+            className="text-xs px-3 py-1 rounded text-red-400 hover:text-red-300 transition-colors"
+          >
+            Sil
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

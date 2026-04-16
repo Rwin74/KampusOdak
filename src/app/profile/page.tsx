@@ -5,6 +5,8 @@ import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Award, Clock, Flame, Shield, User, Building, ExternalLink } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 type Profile = {
   id: string;
   email: string;

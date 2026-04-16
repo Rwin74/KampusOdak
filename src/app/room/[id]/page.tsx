@@ -11,6 +11,8 @@ import AmbientAudio from "@/components/room/AmbientAudio";
 import Whiteboard from "@/components/room/Whiteboard";
 import ChatPanel from "@/components/room/ChatPanel";
 
+export const dynamic = 'force-dynamic';
+
 const playNotifySound = () => {
     try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

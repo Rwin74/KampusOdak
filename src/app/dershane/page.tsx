@@ -5,6 +5,8 @@ import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Users, Send, Copy, Check, Clock, Flame, ShieldAlert } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 type Student = {
   id: string;
   email: string;
