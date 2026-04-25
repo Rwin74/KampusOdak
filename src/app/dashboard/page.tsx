@@ -148,86 +148,163 @@ export default function Dashboard() {
   if (!profile) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
 
   return (
-    <div className="min-h-screen bg-background text-white relative overflow-y-auto flex flex-col">
+    <div className="min-h-screen bg-background text-white relative flex overflow-hidden">
       {/* Background Ambience */}
       <div className="absolute top-0 w-full h-96 bg-primary/10 rounded-b-full filter blur-[100px] pointer-events-none" />
 
-      {/* Header */}
-      <header className="p-6 flex justify-between items-center relative z-10 border-b border-white/5 bg-background/50 backdrop-blur-md">
-        <div className="flex items-center space-x-2">
-          <BookOpen className="w-6 h-6 text-primary" />
-          <h1 className="text-xl font-bold tracking-tight">Kampus<span className="text-primary">Odak</span></h1>
-        </div>
-
-        <div className="flex items-center space-x-6">
-          <div className="flex items-center bg-white/5 border border-white/10 rounded-full px-5 py-2 text-sm font-medium">
-            <span className="flex items-center space-x-1"><Flame className="w-4 h-4 text-orange-400" /> <span>{profile.streak} Gün Serisi</span></span>
-            <span className="text-white/20 px-3">|</span>
-            <span className="flex items-center space-x-1"><Timer className="w-4 h-4 text-accent" /> <span>{profile.total_hours} Saat Odak</span></span>
-            <span className="text-white/20 px-3">|</span>
-            <span className="flex items-center space-x-1"><Star className="w-4 h-4 text-yellow-400" /> <span className="w-12 text-left">{profile.xp || 0} XP</span></span>
-          </div>
-          
-          <div className="flex items-center space-x-3 border-l border-white/20 pl-4">
-            <button onClick={() => router.push("/profile")} className="text-muted-foreground hover:text-white transition" title="Profilim">
-              <User className="w-5 h-5" />
+      {/* SaaS Sidebar */}
+      <aside className="w-64 border-r border-white/5 bg-background/50 backdrop-blur-md hidden md:flex flex-col z-20">
+         <div className="p-6">
+            <div className="flex items-center space-x-2">
+              <BookOpen className="w-6 h-6 text-primary" />
+              <h1 className="text-xl font-bold tracking-tight">Kampus<span className="text-primary">Odak</span></h1>
+            </div>
+         </div>
+         <nav className="flex-1 px-4 space-y-2 mt-4">
+            <button className="w-full flex items-center space-x-3 px-4 py-3 bg-primary/10 border-l-2 border-primary text-primary rounded-r-lg transition-colors">
+               <Target className="w-5 h-5" />
+               <span className="font-semibold tracking-wide">Kontrol Paneli</span>
             </button>
-
+            <button onClick={() => router.push("/profile")} className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:bg-white/5 hover:text-white rounded-lg transition-colors">
+               <User className="w-5 h-5" />
+               <span className="font-medium tracking-wide">Profilim</span>
+            </button>
             {profile.role === 'dershane' && (
-               <button onClick={() => router.push("/dershane")} className="text-blue-400 hover:text-blue-300 transition" title="Kurum Paneli">
-                 <Building className="w-5 h-5" />
-               </button>
-            )}
-
-            <button onClick={async () => { await supabase.auth.signOut(); router.push("/"); }} className="text-muted-foreground hover:text-red-400 transition ml-2" title="Çıkış Yap">
-              <LogOut className="w-5 h-5" />
+            <button onClick={() => router.push("/dershane")} className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:bg-white/5 hover:text-white rounded-lg transition-colors">
+               <Building className="w-5 h-5" />
+               <span className="font-medium tracking-wide">Kurum Paneli</span>
             </button>
+            )}
+         </nav>
+         <div className="p-4 border-t border-white/5">
+            <button onClick={async () => { await supabase.auth.signOut(); router.push("/"); }} className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-colors">
+               <LogOut className="w-5 h-5" />
+               <span className="font-medium tracking-wide">Çıkış Yap</span>
+            </button>
+         </div>
+      </aside>
+
+      {/* Main Container */}
+      <div className="flex-1 flex flex-col relative overflow-y-auto">
+        {/* Header */}
+        <header className="p-6 flex justify-end items-center relative z-10 border-b border-white/5 bg-background/50 backdrop-blur-md">
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center bg-white/5 border border-white/10 rounded-full px-5 py-2 text-sm font-medium hidden sm:flex">
+              <span className="flex items-center space-x-1"><Flame className="w-4 h-4 text-orange-400" /> <span>{profile.streak} Gün Serisi</span></span>
+              <span className="text-white/20 px-3">|</span>
+              <span className="flex items-center space-x-1"><Timer className="w-4 h-4 text-accent" /> <span>{profile.total_hours} Saat Toplam Odak</span></span>
+              <span className="text-white/20 px-3">|</span>
+              <span className="flex items-center space-x-1"><Star className="w-4 h-4 text-yellow-400" /> <span className="w-20 text-left">{profile.xp || 0} Toplam XP</span></span>
+            </div>
+            
+            {/* Mobile Menu Actions */}
+            <div className="md:hidden flex items-center space-x-3 border-l border-white/20 pl-4">
+              <button onClick={() => router.push("/profile")} className="text-muted-foreground hover:text-white transition">
+                <User className="w-5 h-5" />
+              </button>
+              <button onClick={async () => { await supabase.auth.signOut(); router.push("/"); }} className="text-muted-foreground hover:text-red-400 transition ml-2">
+                <LogOut className="w-5 h-5" />
+              </button>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center p-6 relative z-10">
+      <main className="flex-1 flex flex-col items-center justify-start p-6 relative z-10 pt-12">
         <AnimatePresence mode="wait">
           {!matchmaking ? (
             // STANDBY STATE
-            <motion.div key="standby" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -20 }} className="max-w-md w-full glass-panel rounded-3xl p-8 shadow-2xl mb-12">
-              <div className="text-center mb-6">
-                <h2 className="text-2xl font-semibold mb-2">Merhaba, {profile.full_name ? profile.full_name.charAt(0).toUpperCase() + profile.full_name.slice(1) : 'Öğrenci'}!</h2>
-                <p className="text-muted-foreground text-sm">Oturum hedefinizi ve çalışma sürenizi belirleyin.</p>
+            <motion.div key="standby" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col items-center w-full max-w-4xl">
+              <div className="max-w-md w-full glass-panel rounded-3xl p-8 shadow-2xl mb-8 border border-white/10">
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl font-semibold mb-2">Merhaba, {profile.full_name ? profile.full_name.charAt(0).toUpperCase() + profile.full_name.slice(1) : 'Öğrenci'}!</h2>
+                  <p className="text-muted-foreground text-sm">Oturum hedefinizi ve çalışma sürenizi belirleyin.</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  {["YKS", "KPSS", "Üniversite", "VIP Odalar"].map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`py-3 rounded-xl text-center font-medium transition-all text-sm flex items-center justify-center space-x-1 ${selectedCategory === cat ? "bg-accent/20 border-accent shadow-[inset_0_0_20px_rgba(99,102,241,0.1)] text-accent border" : "bg-white/5 border-transparent text-muted-foreground border hover:bg-white/10 hover:text-white"}`}
+                    >
+                      {cat === "VIP Odalar" && <Award className="w-4 h-4 mr-1 text-yellow-400" />}
+                      <span>{cat}</span>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 mb-8">
+                  {[25, 50].map((dur) => (
+                    <button
+                      key={dur} onClick={() => setSelectedDuration(dur)}
+                      className={`p-3 rounded-xl text-center font-medium transition-all flex items-center justify-center space-x-2 text-sm ${selectedDuration === dur ? "bg-accent/20 border-accent shadow-[inset_0_0_20px_rgba(99,102,241,0.1)] text-accent border" : "bg-white/5 border-transparent text-muted-foreground border hover:bg-white/10 hover:text-white"}`}
+                    >
+                      <Clock className="w-4 h-4" /> <span>{dur} Dakika</span>
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={startMatchmaking}
+                  className="w-full py-5 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(245,158,11,0.5)] flex items-center justify-center space-x-2 relative group overflow-hidden"
+                >
+                  <div className="absolute inset-0 w-full h-full bg-white/20 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                  <Clock className="w-5 h-5" />
+                  <span>Odaklanmaya Başla</span>
+                </button>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 mb-4">
-                {["YKS", "KPSS", "Üniversite"].map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`py-3 rounded-xl text-center font-medium transition-all text-sm ${selectedCategory === cat ? "bg-accent/20 border-accent shadow-[inset_0_0_20px_rgba(99,102,241,0.1)] text-accent border" : "bg-white/5 border-transparent text-muted-foreground border hover:bg-white/10 hover:text-white"}`}
-                  >
-                    {cat}
-                  </button>
-                ))}
+              {/* Social Proof & Leaderboard Modules */}
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                 {/* Social Proof Module */}
+                 <div className="glass-panel p-6 rounded-2xl border border-white/10 flex flex-col justify-center shadow-lg relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[50px] pointer-events-none group-hover:bg-primary/10 transition-colors" />
+                    <div className="flex items-center space-x-2 mb-4 relative z-10">
+                       <div className="relative flex h-3 w-3">
+                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                         <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                       </div>
+                       <h3 className="font-bold text-white tracking-wide">{selectedCategory} Odalarında Şu An</h3>
+                    </div>
+                    <div className="text-4xl font-extrabold text-white mb-6 relative z-10">
+                      {Math.floor(Math.random() * 500) + 1200} <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Öğrenci Çalışıyor</span>
+                    </div>
+                    <div className="flex -space-x-3 overflow-hidden relative z-10">
+                       {[11, 23, 34, 45, 56].map((imgId) => (
+                          <img key={imgId} className="inline-block h-10 w-10 rounded-full ring-4 ring-background object-cover" src={`https://i.pravatar.cc/100?img=${imgId}`} alt="Öğrenci"/>
+                       ))}
+                       <div className="flex items-center justify-center h-10 w-10 rounded-full ring-4 ring-background bg-zinc-800 text-[10px] font-bold text-white shadow-inner">+1k</div>
+                    </div>
+                 </div>
+
+                 {/* Leaderboard Module */}
+                 <div className="glass-panel p-6 rounded-2xl border border-white/10 shadow-lg relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-[50px] pointer-events-none group-hover:bg-accent/10 transition-colors" />
+                    <div className="flex items-center justify-between mb-5 relative z-10">
+                       <div className="flex items-center space-x-2">
+                          <Flame className="w-5 h-5 text-accent" />
+                          <h3 className="font-bold text-white tracking-wide">Haftalık Liderler</h3>
+                       </div>
+                       <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground bg-white/5 px-2 py-1 rounded-md">Seri</span>
+                    </div>
+                    <div className="space-y-3 relative z-10">
+                       <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:border-white/10 transition-colors">
+                          <div className="flex items-center space-x-3"><span className="text-yellow-400 font-extrabold w-5 text-center">#1</span><span className="text-sm font-semibold text-white">mert34</span></div>
+                          <span className="text-xs font-bold text-accent px-2 py-1 bg-accent/10 rounded-md">14 Gün</span>
+                       </div>
+                       <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:border-white/10 transition-colors">
+                          <div className="flex items-center space-x-3"><span className="text-gray-400 font-extrabold w-5 text-center">#2</span><span className="text-sm font-semibold text-white">ayşe_study</span></div>
+                          <span className="text-xs font-bold text-accent px-2 py-1 bg-accent/10 rounded-md">12 Gün</span>
+                       </div>
+                       <div className="flex items-center justify-between p-3 rounded-xl bg-primary/20 border border-primary/30 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+                          <div className="flex items-center space-x-3"><span className="text-primary font-extrabold w-5 text-center">#3</span><span className="text-sm font-bold text-white">{profile.full_name?.toLowerCase().replace(/\s/g, '') || 'sen'}</span></div>
+                          <span className="text-xs font-bold text-primary px-2 py-1 bg-primary/20 rounded-md">{profile.streak} Gün</span>
+                       </div>
+                    </div>
+                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 mb-8">
-                {[25, 50].map((dur) => (
-                  <button
-                    key={dur} onClick={() => setSelectedDuration(dur)}
-                    className={`p-3 rounded-xl text-center font-medium transition-all flex items-center justify-center space-x-2 text-sm ${selectedDuration === dur ? "bg-accent/20 border-accent shadow-[inset_0_0_20px_rgba(99,102,241,0.1)] text-accent border" : "bg-white/5 border-transparent text-muted-foreground border hover:bg-white/10 hover:text-white"}`}
-                  >
-                    <Clock className="w-4 h-4" /> <span>{dur} Dakika</span>
-                  </button>
-                ))}
-              </div>
-
-              <button
-                onClick={startMatchmaking}
-                className="w-full py-5 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(245,158,11,0.5)] flex items-center justify-center space-x-2 relative group overflow-hidden"
-              >
-                <div className="absolute inset-0 w-full h-full bg-white/20 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
-                <Clock className="w-5 h-5" />
-                <span>Odaklanmaya Başla</span>
-              </button>
             </motion.div>
           ) : (
             // MATCHMAKING & TRIVIA STATE
@@ -348,6 +425,7 @@ export default function Dashboard() {
           </section>
         )}
       </main>
+      </div>
     </div>
   );
 }
