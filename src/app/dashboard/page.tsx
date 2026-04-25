@@ -160,11 +160,11 @@ export default function Dashboard() {
         </div>
 
         <div className="flex items-center space-x-6">
-          <div className="flex space-x-4 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm font-medium">
+          <div className="flex items-center bg-white/5 border border-white/10 rounded-full px-5 py-2 text-sm font-medium">
             <span className="flex items-center space-x-1"><Flame className="w-4 h-4 text-orange-400" /> <span>{profile.streak} Gün Serisi</span></span>
-            <span className="text-white/20">|</span>
+            <span className="text-white/20 px-3">|</span>
             <span className="flex items-center space-x-1"><Timer className="w-4 h-4 text-accent" /> <span>{profile.total_hours} Saat Odak</span></span>
-            <span className="text-white/20">|</span>
+            <span className="text-white/20 px-3">|</span>
             <span className="flex items-center space-x-1"><Star className="w-4 h-4 text-yellow-400" /> <span className="w-12 text-left">{profile.xp || 0} XP</span></span>
           </div>
           
@@ -193,8 +193,8 @@ export default function Dashboard() {
             // STANDBY STATE
             <motion.div key="standby" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -20 }} className="max-w-md w-full glass-panel rounded-3xl p-8 shadow-2xl mb-12">
               <div className="text-center mb-6">
-                <h2 className="text-2xl font-semibold mb-2">Hoş geldin, {profile.full_name || 'Öğrenci'}</h2>
-                <p className="text-muted-foreground text-sm">Hedefini ve pomodoro süreni seç.</p>
+                <h2 className="text-2xl font-semibold mb-2">Merhaba, {profile.full_name ? profile.full_name.charAt(0).toUpperCase() + profile.full_name.slice(1) : 'Öğrenci'}!</h2>
+                <p className="text-muted-foreground text-sm">Oturum hedefinizi ve çalışma sürenizi belirleyin.</p>
               </div>
 
               <div className="grid grid-cols-3 gap-2 mb-4">
@@ -202,7 +202,7 @@ export default function Dashboard() {
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
-                    className={`py-3 rounded-xl text-center font-medium transition-all text-sm ${selectedCategory === cat ? "bg-primary/20 border-primary shadow-[inset_0_0_20px_rgba(139,92,246,0.1)] text-primary border" : "bg-white/5 border-transparent text-muted-foreground border hover:bg-white/10 hover:text-white"}`}
+                    className={`py-3 rounded-xl text-center font-medium transition-all text-sm ${selectedCategory === cat ? "bg-accent/20 border-accent shadow-[inset_0_0_20px_rgba(99,102,241,0.1)] text-accent border" : "bg-white/5 border-transparent text-muted-foreground border hover:bg-white/10 hover:text-white"}`}
                   >
                     {cat}
                   </button>
@@ -213,7 +213,7 @@ export default function Dashboard() {
                 {[25, 50].map((dur) => (
                   <button
                     key={dur} onClick={() => setSelectedDuration(dur)}
-                    className={`p-3 rounded-xl text-center font-medium transition-all flex items-center justify-center space-x-2 text-sm ${selectedDuration === dur ? "bg-accent/20 border-accent shadow-[inset_0_0_20px_rgba(236,72,153,0.1)] text-accent border" : "bg-white/5 border-transparent text-muted-foreground border hover:bg-white/10 hover:text-white"}`}
+                    className={`p-3 rounded-xl text-center font-medium transition-all flex items-center justify-center space-x-2 text-sm ${selectedDuration === dur ? "bg-accent/20 border-accent shadow-[inset_0_0_20px_rgba(99,102,241,0.1)] text-accent border" : "bg-white/5 border-transparent text-muted-foreground border hover:bg-white/10 hover:text-white"}`}
                   >
                     <Clock className="w-4 h-4" /> <span>{dur} Dakika</span>
                   </button>
@@ -222,7 +222,7 @@ export default function Dashboard() {
 
               <button
                 onClick={startMatchmaking}
-                className="w-full py-5 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white rounded-2xl font-bold text-lg transition-all shadow-lg shadow-primary/20 flex items-center justify-center space-x-2 relative group overflow-hidden"
+                className="w-full py-5 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(245,158,11,0.5)] flex items-center justify-center space-x-2 relative group overflow-hidden"
               >
                 <div className="absolute inset-0 w-full h-full bg-white/20 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                 <Clock className="w-5 h-5" />
@@ -287,8 +287,8 @@ export default function Dashboard() {
         {bilgiler.length > 0 && (
           <section className="w-full max-w-4xl mt-8 space-y-4">
             <div className="flex items-center space-x-2 mb-6">
-              <BookOpen className="w-6 h-6 text-primary" />
-              <h2 className="text-2xl font-bold">Bilgi Köşesi</h2>
+              <BookOpen className="w-6 h-6 text-muted-foreground" />
+              <h2 className="text-2xl font-bold text-muted-foreground">Bilgi Köşesi</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {bilgiler.map((bilgi) => (
