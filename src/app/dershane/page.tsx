@@ -99,11 +99,11 @@ export default function DershanePage() {
   };
 
   if (loading) {
-    return <div className="min-h-screen bg-black flex items-center justify-center"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>;
+    return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-6 relative">
+    <div className="min-h-screen bg-background text-white p-6 relative">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">

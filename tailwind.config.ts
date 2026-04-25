@@ -9,38 +9,42 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#09090b", // zinc-950
-        foreground: "#fafafa", // zinc-50
+        background: "#0F172A", // Deep Navy
+        foreground: "#F8FAFC", // Ice White
         primary: {
-          DEFAULT: "#8b5cf6", // violet-500
+          DEFAULT: "#F59E0B", // Brand Amber
           foreground: "#ffffff",
-          hover: "#7c3aed", // violet-600
+          hover: "#D97706", // Amber Hover
         },
         secondary: {
-          DEFAULT: "#27272a", // zinc-800
-          foreground: "#fafafa", // zinc-50
-          hover: "#3f3f46", // zinc-700
+          DEFAULT: "#1E293B", // Surface Navy
+          foreground: "#CBD5E1", // Soft Gray
+          hover: "#334155", // Subtle Border
         },
         accent: {
-          DEFAULT: "#22d3ee", // cyan-400
-          foreground: "#083344", // cyan-950
+          DEFAULT: "#6366F1", // Premium Indigo
+          foreground: "#F8FAFC", // Ice White
         },
         destructive: {
-          DEFAULT: "#ef4444", // red-500
+          DEFAULT: "#EF4444", // Uyarı Kırmızısı
+          foreground: "#ffffff",
+        },
+        success: {
+          DEFAULT: "#10B981", // Odak Yeşili
           foreground: "#ffffff",
         },
         muted: {
-          DEFAULT: "#18181b", // zinc-900
-          foreground: "#a1a1aa", // zinc-400
+          DEFAULT: "#1E293B", // Surface Navy
+          foreground: "#94A3B8", // Muted Gray
         },
         card: {
-          DEFAULT: "#09090b",
-          border: "#27272a",
+          DEFAULT: "#1E293B", // Surface Navy
+          border: "#334155", // Subtle Border
         }
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-grid": "linear-gradient(to right, #27272a 1px, transparent 1px), linear-gradient(to bottom, #27272a 1px, transparent 1px)",
+        "gradient-grid": "linear-gradient(to right, #1E293B 1px, transparent 1px), linear-gradient(to bottom, #1E293B 1px, transparent 1px)",
       },
       animation: {
         "blob": "blob 7s infinite",

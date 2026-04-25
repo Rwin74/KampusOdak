@@ -59,7 +59,7 @@ export default function ChatPanel({ isOpen, onClose }: { isOpen: boolean, onClos
               <h3 className="font-bold text-lg flex items-center space-x-2 text-white tracking-widest">
                  <MessageSquare className="w-5 h-5 text-accent" /> <span>Oda Sohbeti</span>
               </h3>
-              <button type="button" onClick={(e) => { e.stopPropagation(); onClose(); }} className="p-2 bg-black/40 hover:bg-white/10 rounded-full transition text-muted-foreground hover:text-white shadow-lg cursor-pointer z-[60] relative">
+              <button type="button" onClick={(e) => { e.stopPropagation(); onClose(); }} className="p-2 bg-background/40 hover:bg-white/10 rounded-full transition text-muted-foreground hover:text-white shadow-lg cursor-pointer z-[60] relative">
                   <X className="w-5 h-5 pointer-events-none" />
               </button>
           </div>
@@ -82,7 +82,7 @@ export default function ChatPanel({ isOpen, onClose }: { isOpen: boolean, onClos
               <div ref={messagesEndRef} />
           </div>
           
-          <form onSubmit={sendMessage} className="p-4 border-t border-white/5 bg-black/50">
+          <form onSubmit={sendMessage} className="p-4 border-t border-white/5 bg-background/50">
              <div className="flex bg-white/5 border border-white/10 rounded-2xl focus-within:border-accent/40 focus-within:bg-white/10 transition-all shadow-inner">
                  <input 
                      type="text" 

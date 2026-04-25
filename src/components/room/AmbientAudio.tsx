@@ -34,7 +34,7 @@ export default function AmbientAudio() {
   };
 
   return (
-    <div className="flex items-center bg-black/40 border border-white/10 rounded-full p-2 space-x-2 backdrop-blur-md shadow-lg">
+    <div className="flex items-center bg-background/40 border border-white/10 rounded-full p-2 space-x-2 backdrop-blur-md shadow-lg">
        <audio ref={audioRef} loop />
        {SOUNDS.map(s => {
           const Icon = s.icon;

@@ -144,11 +144,11 @@ export default function Whiteboard() {
   };
 
   return (
-    <div ref={containerRef} className="relative w-full h-full bg-black/40 rounded-3xl overflow-hidden backdrop-blur-md border object-contain border-white/10 group shadow-[inset_0_0_50px_rgba(255,255,255,0.02)]">
+    <div ref={containerRef} className="relative w-full h-full bg-background/40 rounded-3xl overflow-hidden backdrop-blur-md border object-contain border-white/10 group shadow-[inset_0_0_50px_rgba(255,255,255,0.02)]">
         <canvas ref={canvasRef} className="w-full h-full" />
         
         {/* Toolbar */}
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 p-2 bg-black/60 backdrop-blur-xl border border-white/10 rounded-full flex items-center space-x-2 shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 p-2 bg-background/60 backdrop-blur-xl border border-white/10 rounded-full flex items-center space-x-2 shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div className="flex space-x-1 px-2">
                <button onClick={() => setMode('draw')} className={`p-2 rounded-full transition ${mode === 'draw' ? 'bg-primary text-white' : 'text-white/50 hover:bg-white/10'}`}><PenTool className="w-4 h-4" /></button>
                <button onClick={() => setMode('select')} className={`p-2 rounded-full transition ${mode === 'select' ? 'bg-primary text-white' : 'text-white/50 hover:bg-white/10'}`}><MousePointer2 className="w-4 h-4" /></button>

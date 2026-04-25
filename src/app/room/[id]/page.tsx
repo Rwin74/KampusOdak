@@ -41,7 +41,7 @@ function BottomControlBar({ micTimer, requestMic, requestBreak, toggleWhiteboard
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-      <div className="flex items-center space-x-3 bg-black/60 backdrop-blur-3xl border border-white/10 px-6 py-4 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+      <div className="flex items-center space-x-3 bg-background/60 backdrop-blur-3xl border border-white/10 px-6 py-4 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
          
          {/* Camera Toggle */}
          <div className="relative group">
@@ -55,10 +55,10 @@ function BottomControlBar({ micTimer, requestMic, requestBreak, toggleWhiteboard
                  {showSettings && (
                      <motion.div initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.95 }} className="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-zinc-900 border border-white/10 p-4 rounded-2xl w-64 shadow-2xl">
                          <h4 className="text-xs text-muted-foreground uppercase font-bold tracking-widest mb-3">Kamera Seçimi</h4>
-                         <MediaDeviceMenu kind="videoinput" className="w-full bg-black border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none" />
+                         <MediaDeviceMenu kind="videoinput" className="w-full bg-background border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none" />
                          <div className="h-px bg-white/10 my-3" />
                          <h4 className="text-xs text-muted-foreground uppercase font-bold tracking-widest mb-3">Mikrofon Seçimi</h4>
-                         <MediaDeviceMenu kind="audioinput" className="w-full bg-black border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none" />
+                         <MediaDeviceMenu kind="audioinput" className="w-full bg-background border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none" />
                      </motion.div>
                  )}
              </AnimatePresence>
@@ -95,7 +95,7 @@ function BottomControlBar({ micTimer, requestMic, requestBreak, toggleWhiteboard
 
          <div className="w-px h-8 bg-white/10 mx-2" />
          
-         <button onClick={requestBreak} className="px-6 py-4 bg-black/50 hover:bg-white/10 text-white rounded-full font-semibold transition-all border border-white/5 flex items-center space-x-2">
+         <button onClick={requestBreak} className="px-6 py-4 bg-background/50 hover:bg-white/10 text-white rounded-full font-semibold transition-all border border-white/5 flex items-center space-x-2">
              <Hand className="w-4 h-4"/> <span>Mola İste</span>
          </button>
       </div>
@@ -109,12 +109,12 @@ function TracksRenderer({ isWhiteboardOpen }: { isWhiteboardOpen: boolean }) {
         <motion.div layout className={`flex w-full relative z-30 ${isWhiteboardOpen ? 'gap-[140px] h-[160px] justify-center items-start mb-6 mt-4' : 'gap-6 flex-1 items-center justify-center'}`}>
              <AnimatePresence>
              {videoTracks.map((track) => (
-                 <motion.div layout key={track.participant.identity} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} transition={{stiffness: 200, damping: 20}} className={`relative rounded-[2rem] overflow-hidden glass-panel border border-white/10 bg-black shadow-2xl group ${isWhiteboardOpen ? 'w-[284px] h-[160px]' : 'aspect-video w-full max-w-3xl'}`}>
+                 <motion.div layout key={track.participant.identity} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} transition={{stiffness: 200, damping: 20}} className={`relative rounded-[2rem] overflow-hidden glass-panel border border-white/10 bg-background shadow-2xl group ${isWhiteboardOpen ? 'w-[284px] h-[160px]' : 'aspect-video w-full max-w-3xl'}`}>
                      <VideoTrack trackRef={track} className="w-full h-full object-cover transform" />
                      {/* Overlay */}
                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
                      
-                     <div className="absolute bottom-4 left-4 bg-black/40 px-4 py-2 rounded-2xl text-xs font-bold font-mono tracking-wider text-white backdrop-blur-xl border border-white/5 flex items-center space-x-3 shadow-2xl">
+                     <div className="absolute bottom-4 left-4 bg-background/40 px-4 py-2 rounded-2xl text-xs font-bold font-mono tracking-wider text-white backdrop-blur-xl border border-white/5 flex items-center space-x-3 shadow-2xl">
                          {/* Connection Dot */}
                          <div className="relative">
                             <div className="w-2 h-2 bg-green-500 rounded-full" />
@@ -231,7 +231,7 @@ function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard,
         {/* Neon Central Timer Layout V2 */}
         <motion.div layout className={`absolute transition-all duration-700 z-40 left-1/2 -translate-x-1/2 ${isWhiteboardOpen ? 'top-6 scale-[0.65] origin-top' : 'top-10 scale-100 origin-top'}`}>
           <div className="flex flex-col items-center justify-center p-[2px] rounded-full bg-gradient-to-r from-accent via-primary to-accent shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_50px_rgba(236,72,153,0.5)] transition-shadow">
-             <div className="flex items-center space-x-3 bg-black rounded-full px-8 py-3">
+             <div className="flex items-center space-x-3 bg-background rounded-full px-8 py-3">
                 <Clock className="w-5 h-5 text-accent animate-pulse" />
                 <span className="font-mono text-3xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">{currentDurationFormatted}</span>
              </div>
@@ -374,7 +374,7 @@ function RoomContent() {
 
   if (camSetupStatus !== "selected") {
       return (
-          <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-6 text-white relative">
+          <div className="min-h-screen bg-background flex items-center justify-center p-6 text-white relative">
               <div className="max-w-md w-full bg-zinc-900 border border-white/10 p-8 rounded-3xl shadow-2xl text-center space-y-6">
                  <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
                     <Video className="w-10 h-10 text-primary animate-pulse" />
@@ -388,7 +388,7 @@ function RoomContent() {
                         <div>
                             <label className="text-muted-foreground text-sm font-semibold tracking-widest uppercase ml-1 block mb-2">Kamera Seçin</label>
                             <select 
-                               className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white"
+                               className="w-full bg-background border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white"
                                value={selectedCameraId}
                                onChange={(e) => setSelectedCameraId(e.target.value)}
                             >
@@ -400,7 +400,7 @@ function RoomContent() {
                         <div>
                             <label className="text-muted-foreground text-sm font-semibold tracking-widest uppercase ml-1 block mb-2 mt-2">Mikrofon Seçin</label>
                             <select 
-                               className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white"
+                               className="w-full bg-background border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white"
                                value={selectedMicId}
                                onChange={(e) => setSelectedMicId(e.target.value)}
                             >
@@ -423,12 +423,12 @@ function RoomContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white relative flex flex-col overflow-hidden font-sans">
+    <div className="min-h-screen bg-background text-white relative flex flex-col overflow-hidden font-sans">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-black to-black pointer-events-none" />
 
       <AnimatePresence>
         {partnerDropped && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-2xl flex items-center justify-center p-6">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] bg-background/90 backdrop-blur-2xl flex items-center justify-center p-6">
             <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="max-w-md w-full bg-zinc-950 border border-red-500/30 p-10 rounded-[3rem] text-center space-y-6 shadow-[0_0_150px_rgba(239,68,68,0.15)] relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-2 bg-red-500/20"><motion.div initial={{ width: "0%" }} animate={{ width: "100%" }} transition={{ duration: 7, ease: "linear" }} className="h-full bg-red-500 shadow-[0_0_20px_rgba(239,68,68,1)]" /></div>
               <div className="w-24 h-24 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/30">
@@ -446,7 +446,7 @@ function RoomContent() {
           <button onClick={leaveRoom} className="p-4 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-muted-foreground hover:text-white transition-all group shadow-2xl backdrop-blur-md">
             <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           </button>
-          <div className="flex flex-col bg-black/50 px-5 py-3 rounded-2xl backdrop-blur-md border border-white/5 shadow-xl">
+          <div className="flex flex-col bg-background/50 px-5 py-3 rounded-2xl backdrop-blur-md border border-white/5 shadow-xl">
             <h1 className="text-sm font-extrabold tracking-tight text-white flex items-center space-x-2"><Users className="w-4 h-4 text-primary" /> <span>Hücre: {id?.slice(0,6)}...</span></h1>
             <span className="text-primary/60 text-[10px] mt-1 tracking-widest uppercase font-bold">{category}</span>
           </div>
@@ -471,7 +471,7 @@ function RoomContent() {
                  className="flex-1 flex flex-col h-full rounded-[3rem] relative"
              >
                  {breakTimeRemaining > 0 && (
-                     <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="absolute inset-0 z-[100] bg-black/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 text-white border-4 border-accent/20 rounded-[3rem]">
+                     <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="absolute inset-0 z-[100] bg-background/95 backdrop-blur-3xl flex flex-col items-center justify-center p-6 text-white border-4 border-accent/20 rounded-[3rem]">
                         <Coffee className="w-32 h-32 text-accent mb-8 drop-shadow-[0_0_50px_rgba(236,72,153,0.5)] animate-pulse" />
                         <h1 className="text-6xl font-extrabold mb-6 tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">Mola Odası</h1>
                         
@@ -523,7 +523,7 @@ function RoomContent() {
 
 export default function RoomPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <RoomContent />
     </Suspense>
   );

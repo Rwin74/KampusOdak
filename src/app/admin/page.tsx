@@ -99,12 +99,12 @@ export default function AdminDashboard() {
     if (haberData) setHaberler(haberData as Haberler[]);
   };
 
-  if (isAdmin === null) return <div className="min-h-screen bg-black flex items-center justify-center text-primary"><Zap className="w-12 h-12 animate-pulse" /></div>;
+  if (isAdmin === null) return <div className="min-h-screen bg-background flex items-center justify-center text-primary"><Zap className="w-12 h-12 animate-pulse" /></div>;
 
   return (
-    <div className="min-h-screen bg-black text-white font-mono flex flex-col md:flex-row">
+    <div className="min-h-screen bg-background text-white font-mono flex flex-col md:flex-row">
       {/* SIDEBAR */}
-      <div className="w-full md:w-64 border-b md:border-b-0 md:border-r border-white/10 bg-zinc-950 flex flex-col pt-8 p-4 z-10 relative shadow-2xl">
+      <div className="w-full md:w-64 border-b md:border-b-0 md:border-r border-white/10 bg-card flex flex-col pt-8 p-4 z-10 relative shadow-2xl">
         <div className="flex items-center space-x-3 text-accent mb-12 px-2">
           {userProfile?.role === 'admin' ? <Server className="w-8 h-8" /> : <Building className="w-8 h-8"/>}
           <h1 className="text-xl font-bold tracking-widest uppercase">{userProfile?.role === 'admin' ? "God Mode" : "Kurum Paneli"}</h1>
@@ -180,7 +180,7 @@ function AnalyticsPanel({ orgStats, churnStats }: { orgStats: OrgStats[], churnS
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
         {/* Peak Study Hours Leaderboard */}
-        <div className="bg-zinc-950 border border-white/10 rounded-2xl p-6 shadow-xl">
+        <div className="bg-card border border-white/10 rounded-2xl p-6 shadow-xl">
           <h3 className="text-lg font-bold mb-6 text-white flex items-center space-x-2">
             <Server className="w-5 h-5 text-primary" /> <span>Kurum Performans Sıralaması (Saat)</span>
           </h3>
@@ -198,7 +198,7 @@ function AnalyticsPanel({ orgStats, churnStats }: { orgStats: OrgStats[], churnS
         </div>
 
         {/* Churn Rate (Drop off) */}
-        <div className="bg-zinc-950 border border-white/10 rounded-2xl p-6 shadow-xl">
+        <div className="bg-card border border-white/10 rounded-2xl p-6 shadow-xl">
           <h3 className="text-lg font-bold mb-6 text-white flex items-center space-x-2">
             <AlertTriangle className="w-5 h-5 text-red-500" /> <span>Erken Ayrılma (Churn) Disiplin Puanı</span>
           </h3>
@@ -261,7 +261,7 @@ function InvitesPanel({ invites, refreshData, userProfile }: { invites: Invite[]
           )}
         </div>
       </div>
-      <div className="bg-zinc-950 border border-white/10 rounded-xl overflow-hidden shadow-2xl">
+      <div className="bg-card border border-white/10 rounded-xl overflow-hidden shadow-2xl">
         <table className="w-full text-sm text-left">
           <thead className="bg-white/5 text-muted-foreground uppercase text-xs">
             <tr>
@@ -334,7 +334,7 @@ function UsersPanel({ profiles, refreshData, userProfile }: { profiles: Profile[
         <h2 className="text-2xl font-bold flex items-center space-x-2"><Users className="w-6 h-6 text-primary"/> <span>Kullanıcı Radarı</span></h2>
       </div>
 
-      <div className="bg-zinc-950 border border-white/10 rounded-xl overflow-hidden shadow-2xl">
+      <div className="bg-card border border-white/10 rounded-xl overflow-hidden shadow-2xl">
         <table className="w-full text-sm text-left">
           <thead className="bg-white/5 text-muted-foreground uppercase text-xs">
             <tr>
@@ -449,7 +449,7 @@ function InviteTreePanel({ invites, profiles }: { invites: Invite[], profiles: P
         <h2 className="text-2xl font-bold flex items-center space-x-2"><Network className="w-6 h-6 text-primary"/> <span>Davetiye Ağacı</span></h2>
         <p className="text-muted-foreground text-sm mt-1">Hangi üyenin hangi kanalla/zincirleme kim tarafından davet edildiğini izleyin.</p>
       </div>
-      <div className="bg-black border border-white/10 p-6 rounded-2xl overflow-x-auto shadow-2xl">
+      <div className="bg-card border border-white/10 p-6 rounded-2xl overflow-x-auto shadow-2xl">
           {treeNodes.map(node => renderNode(node, 0))}
       </div>
     </motion.div>
@@ -462,7 +462,7 @@ function InviteTreePanel({ invites, profiles }: { invites: Invite[], profiles: P
 function LogsPanel({ logs }: { logs: Log[] }) {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4 h-[calc(100vh-6rem)] flex flex-col">
-      <div className="bg-black border border-green-900/50 rounded-lg p-6 flex-1 overflow-y-auto font-mono text-sm text-green-500 shadow-[inset_0_0_50px_rgba(0,255,0,0.05)]">
+      <div className="bg-card border border-green-900/50 rounded-lg p-6 flex-1 overflow-y-auto font-mono text-sm text-green-500 shadow-[inset_0_0_50px_rgba(0,255,0,0.05)]">
         {logs.map(log => (
           <div key={log.id} className="mb-2 leading-relaxed flex items-start space-x-4 border-b border-green-900/30 pb-2">
             <span className="text-green-700 whitespace-nowrap">[{new Date(log.created_at).toISOString().replace('T', ' ').substring(0, 19)}]</span>
@@ -642,7 +642,7 @@ function ContentForm({ type, item, onSave, onCancel }: { type: "bilgi" | "haber"
             type="text"
             value={formData.baslik}
             onChange={(e) => setFormData({ ...formData, baslik: e.target.value })}
-            className="w-full bg-black/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary"
+            className="w-full bg-background/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary"
             required
           />
         </div>
@@ -651,7 +651,7 @@ function ContentForm({ type, item, onSave, onCancel }: { type: "bilgi" | "haber"
           <textarea
             value={formData.icerik}
             onChange={(e) => setFormData({ ...formData, icerik: e.target.value })}
-            className="w-full bg-black/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary min-h-[100px]"
+            className="w-full bg-background/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary min-h-[100px]"
             required
           />
         </div>
@@ -660,7 +660,7 @@ function ContentForm({ type, item, onSave, onCancel }: { type: "bilgi" | "haber"
           <select
             value={formData.kategori}
             onChange={(e) => setFormData({ ...formData, kategori: e.target.value })}
-            className="w-full bg-black/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary"
+            className="w-full bg-background/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary"
           >
             <option value="genel">Genel</option>
             <option value="ytks">YKS</option>
@@ -678,7 +678,7 @@ function ContentForm({ type, item, onSave, onCancel }: { type: "bilgi" | "haber"
               type="text"
               value={formData.link}
               onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-              className="w-full bg-black/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary"
+              className="w-full bg-background/50 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary"
               placeholder="https://..."
             />
           </div>

@@ -145,15 +145,15 @@ export default function Dashboard() {
     }, 1500);
   };
 
-  if (!profile) return <div className="min-h-screen bg-black flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
+  if (!profile) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-y-auto flex flex-col">
+    <div className="min-h-screen bg-background text-white relative overflow-y-auto flex flex-col">
       {/* Background Ambience */}
       <div className="absolute top-0 w-full h-96 bg-primary/10 rounded-b-full filter blur-[100px] pointer-events-none" />
 
       {/* Header */}
-      <header className="p-6 flex justify-between items-center relative z-10 border-b border-white/5 bg-black/50 backdrop-blur-md">
+      <header className="p-6 flex justify-between items-center relative z-10 border-b border-white/5 bg-background/50 backdrop-blur-md">
         <div className="flex items-center space-x-2">
           <BookOpen className="w-6 h-6 text-primary" />
           <h1 className="text-xl font-bold tracking-tight">Kampus<span className="text-primary">Odak</span></h1>

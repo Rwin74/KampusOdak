@@ -156,7 +156,7 @@ export default function Home() {
                     required 
                     value={inviteCode}
                     onChange={(e) => setInviteCode(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-white placeholder-white/30 uppercase tracking-widest"
+                    className="w-full pl-10 pr-4 py-3 bg-background/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-white placeholder-white/30 uppercase tracking-widest"
                     placeholder="KURUM-V123 VEYA XYZ-123-ABC"
                   />
                 </div>
@@ -170,7 +170,7 @@ export default function Home() {
                 required 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-white placeholder-white/30"
+                className="w-full px-4 py-3 bg-background/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-white placeholder-white/30"
                 placeholder="isim@universite.edu.tr"
               />
             </div>
@@ -182,7 +182,7 @@ export default function Home() {
                 required 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-white placeholder-white/30"
+                className="w-full px-4 py-3 bg-background/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-white placeholder-white/30"
                 placeholder="••••••••"
               />
             </div>

@@ -57,13 +57,13 @@ export default function ProfilePage() {
   }, [router]);
 
   if (loading) {
-    return <div className="min-h-screen bg-black flex items-center justify-center"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>;
+    return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (!profile) return null;
 
   return (
-    <div className="min-h-screen bg-black text-white p-6 relative overflow-y-auto">
+    <div className="min-h-screen bg-background text-white p-6 relative overflow-y-auto">
       {/* Background Ambience */}
       <div className="fixed top-0 left-0 w-full h-full bg-grid-pattern opacity-10 pointer-events-none" />
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/20 rounded-full blur-[120px] pointer-events-none" />
