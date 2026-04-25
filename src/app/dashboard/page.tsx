@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Timer, Flame, Target, BookOpen, Clock, Loader2, Award, Star, User, Building, ExternalLink } from "lucide-react";
+import { LogOut, Timer, Flame, Target, BookOpen, Clock, Loader2, Award, Star, User, Building, ExternalLink, Library, LineChart, ShoppingCart, PlayCircle, Trophy } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -160,22 +160,69 @@ export default function Dashboard() {
               <h1 className="text-xl font-bold tracking-tight">Kampus<span className="text-primary">Odak</span></h1>
             </div>
          </div>
-         <nav className="flex-1 px-4 space-y-2 mt-4">
-            <button className="w-full flex items-center space-x-3 px-4 py-3 bg-primary/10 border-l-2 border-primary text-primary rounded-r-lg transition-colors">
-               <Target className="w-5 h-5" />
-               <span className="font-semibold tracking-wide">Kontrol Paneli</span>
-            </button>
-            <button onClick={() => router.push("/profile")} className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:bg-white/5 hover:text-white rounded-lg transition-colors">
-               <User className="w-5 h-5" />
-               <span className="font-medium tracking-wide">Profilim</span>
-            </button>
-            {profile.role === 'dershane' && (
-            <button onClick={() => router.push("/dershane")} className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:bg-white/5 hover:text-white rounded-lg transition-colors">
-               <Building className="w-5 h-5" />
-               <span className="font-medium tracking-wide">Kurum Paneli</span>
-            </button>
-            )}
-         </nav>
+         <div className="flex-1 overflow-y-auto mt-2 pb-4 scrollbar-hide">
+           {/* GRUP A: ÇALIŞMA ALANI */}
+           <div className="px-6 mb-2 mt-4">
+              <span className="text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest">Çalışma Alanı</span>
+           </div>
+           <nav className="px-4 space-y-1 mb-8">
+              <button className="w-full flex items-center space-x-3 px-4 py-3 bg-primary/10 border-l-2 border-primary text-primary rounded-r-lg transition-colors">
+                 <Target className="w-5 h-5" />
+                 <span className="font-semibold tracking-wide text-sm">Kontrol Paneli</span>
+              </button>
+              <button className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:bg-white/5 hover:text-white rounded-lg transition-colors">
+                 <Library className="w-5 h-5" />
+                 <span className="font-medium tracking-wide text-sm">Sanal Kütüphane</span>
+              </button>
+              <button className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:bg-white/5 hover:text-white rounded-lg transition-colors">
+                 <LineChart className="w-5 h-5" />
+                 <span className="font-medium tracking-wide text-sm">Gelişim Raporu</span>
+              </button>
+           </nav>
+
+           <div className="mx-6 h-px bg-white/5 mb-8"></div>
+
+           {/* GRUP B: KAMPÜS EKOSİSTEMİ */}
+           <div className="px-6 mb-2">
+              <span className="text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest">Kampüs Ekosistemi</span>
+           </div>
+           <nav className="px-4 space-y-1 mb-8">
+              <button className="w-full flex items-center justify-between px-4 py-3 text-muted-foreground hover:bg-white/5 hover:text-white rounded-lg transition-colors group">
+                 <div className="flex items-center space-x-3">
+                    <ShoppingCart className="w-5 h-5 group-hover:text-primary transition-colors" />
+                    <span className="font-medium tracking-wide text-sm">Kampüs Market</span>
+                 </div>
+                 <span className="text-[9px] font-bold bg-accent text-white px-2 py-0.5 rounded-full uppercase tracking-wider shadow-[0_0_10px_rgba(99,102,241,0.5)] animate-pulse">YENİ</span>
+              </button>
+              <button className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:bg-white/5 hover:text-white rounded-lg transition-colors group">
+                 <PlayCircle className="w-5 h-5 group-hover:text-accent transition-colors" />
+                 <span className="font-medium tracking-wide text-sm">Video Akademi</span>
+              </button>
+              <button className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:bg-white/5 hover:text-white rounded-lg transition-colors group">
+                 <Trophy className="w-5 h-5 group-hover:text-yellow-400 transition-colors" />
+                 <span className="font-medium tracking-wide text-sm">Başarı Odası</span>
+              </button>
+           </nav>
+           
+           <div className="mx-6 h-px bg-white/5 mb-8"></div>
+
+           {/* HESAP */}
+           <div className="px-6 mb-2">
+              <span className="text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest">Hesap</span>
+           </div>
+           <nav className="px-4 space-y-1">
+              <button onClick={() => router.push("/profile")} className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:bg-white/5 hover:text-white rounded-lg transition-colors">
+                 <User className="w-5 h-5" />
+                 <span className="font-medium tracking-wide text-sm">Profilim</span>
+              </button>
+              {profile.role === 'dershane' && (
+              <button onClick={() => router.push("/dershane")} className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:bg-white/5 hover:text-white rounded-lg transition-colors">
+                 <Building className="w-5 h-5" />
+                 <span className="font-medium tracking-wide text-sm">Kurum Paneli</span>
+              </button>
+              )}
+           </nav>
+         </div>
          <div className="p-4 border-t border-white/5">
             <button onClick={async () => { await supabase.auth.signOut(); router.push("/"); }} className="w-full flex items-center space-x-3 px-4 py-3 text-muted-foreground hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-colors">
                <LogOut className="w-5 h-5" />
