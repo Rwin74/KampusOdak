@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Lock, ArrowRight, ShieldCheck, Zap, Users } from "lucide-react";
+import { Lock, ArrowRight } from "lucide-react";
 
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -108,7 +108,7 @@ export default function Home() {
         >
            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full glass-panel text-sm text-accent">
             <Lock className="w-4 h-4" />
-            <span>Sadece Davetiye İle (Invite-Only)</span>
+            <span>Şuanlık Sadece davetiye ile</span>
           </div>
 
           <h1 className="text-5xl lg:text-7xl font-bold tracking-tight text-foreground">
@@ -116,14 +116,10 @@ export default function Home() {
           </h1>
           
           <p className="text-xl text-muted-foreground max-w-lg leading-relaxed">
-            Türkiye&apos;nin ilk kapalı devre, sıfır-trol dijital çalışma kütüphanesi. Sadece gerçekten odaklanmak isteyenler için tasarlandı.
+            Yeni nesil dijital çalışma kütüphanesi. Evdeki dikkat dağıtıcıları geride bırakın ve hedeflerinize binlerce öğrenciyle birlikte kesintisiz odaklanın
           </p>
 
-          <div className="space-y-4 pt-4">
-            <Feature icon={<ShieldCheck className="w-6 h-6 text-primary" />} title="Yapay Zeka Destekli Güvenlik" desc="NSFW.js ile anlık, yerel (tarayıcı içi) trol filtresi." />
-            <Feature icon={<Zap className="w-6 h-6 text-accent" />} title="God Mode Denetim" desc="Davetiyeler ve otonom ban mekanizması ile %100 temiz ortam." />
-            <Feature icon={<Users className="w-6 h-6 text-purple-400" />} title="Prestij Kulübü" desc="10 saat başarılı odaklanmada otomatik yeni davetiye hakkı kazanın." />
-          </div>
+
         </motion.div>
 
         {/* Right Side: Glassmorphism Auth Card */}
@@ -215,16 +211,4 @@ export default function Home() {
   );
 }
 
-function Feature({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
-  return (
-    <div className="flex items-start space-x-4">
-      <div className="flex-shrink-0 p-3 bg-white/5 rounded-xl border border-white/10">
-        {icon}
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold text-foreground/90">{title}</h3>
-        <p className="text-sm text-muted-foreground mt-1">{desc}</p>
-      </div>
-    </div>
-  );
-}
+
