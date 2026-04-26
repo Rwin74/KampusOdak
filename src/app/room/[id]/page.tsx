@@ -40,63 +40,63 @@ function BottomControlBar({ micTimer, requestMic, requestBreak, toggleWhiteboard
   const [showSettings, setShowSettings] = useState(false);
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-      <div className="flex items-center space-x-3 bg-background/60 backdrop-blur-3xl border border-white/10 px-6 py-4 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+    <div className="fixed bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-50 w-max max-w-[95vw]">
+      <div className="flex items-center justify-between md:justify-center gap-1 md:gap-0 md:space-x-3 bg-background/80 backdrop-blur-3xl border border-white/10 px-2 py-2 md:px-6 md:py-4 rounded-[2rem] md:rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-x-auto no-scrollbar w-full">
          
          {/* Camera Toggle */}
-         <div className="relative group">
-             <TrackToggle source={Track.Source.Camera} showIcon={true} className="p-4 rounded-full bg-white/10 hover:bg-white/20 text-white transition data-[state=off]:bg-red-500/20 data-[state=off]:text-red-400" />
-             <button onClick={() => setShowSettings(!showSettings)} className="absolute -top-2 -right-2 p-1.5 bg-zinc-800 rounded-full text-white hover:bg-zinc-700 transition shadow-xl border border-white/10">
-                <Settings className="w-3 h-3" />
+         <div className="relative group shrink-0">
+             <TrackToggle source={Track.Source.Camera} showIcon={true} className="p-2.5 md:p-4 rounded-full bg-white/10 hover:bg-white/20 text-white transition data-[state=off]:bg-red-500/20 data-[state=off]:text-red-400 flex items-center justify-center" />
+             <button onClick={() => setShowSettings(!showSettings)} className="absolute -top-1 -right-1 md:-top-2 md:-right-2 p-1 md:p-1.5 bg-zinc-800 rounded-full text-white hover:bg-zinc-700 transition shadow-xl border border-white/10">
+                <Settings className="w-2.5 h-2.5 md:w-3 md:h-3" />
              </button>
              
              {/* Device Settings Popover */}
              <AnimatePresence>
                  {showSettings && (
-                     <motion.div initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.95 }} className="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-zinc-900 border border-white/10 p-4 rounded-2xl w-64 shadow-2xl">
-                         <h4 className="text-xs text-muted-foreground uppercase font-bold tracking-widest mb-3">Kamera Seçimi</h4>
-                         <MediaDeviceMenu kind="videoinput" className="w-full bg-background border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none" />
-                         <div className="h-px bg-white/10 my-3" />
-                         <h4 className="text-xs text-muted-foreground uppercase font-bold tracking-widest mb-3">Mikrofon Seçimi</h4>
-                         <MediaDeviceMenu kind="audioinput" className="w-full bg-background border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none" />
+                     <motion.div initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.95 }} className="absolute bottom-full mb-2 md:mb-4 left-0 md:left-1/2 md:-translate-x-1/2 bg-zinc-900 border border-white/10 p-3 md:p-4 rounded-2xl w-48 md:w-64 shadow-2xl">
+                         <h4 className="text-[10px] md:text-xs text-muted-foreground uppercase font-bold tracking-widest mb-2 md:mb-3">Kamera Seçimi</h4>
+                         <MediaDeviceMenu kind="videoinput" className="w-full bg-background border border-white/10 rounded-xl px-2 py-1.5 md:px-3 md:py-2 text-[10px] md:text-sm text-white focus:outline-none" />
+                         <div className="h-px bg-white/10 my-2 md:my-3" />
+                         <h4 className="text-[10px] md:text-xs text-muted-foreground uppercase font-bold tracking-widest mb-2 md:mb-3">Mikrofon Seçimi</h4>
+                         <MediaDeviceMenu kind="audioinput" className="w-full bg-background border border-white/10 rounded-xl px-2 py-1.5 md:px-3 md:py-2 text-[10px] md:text-sm text-white focus:outline-none" />
                      </motion.div>
                  )}
              </AnimatePresence>
          </div>
 
-         <div className="w-px h-8 bg-white/10 mx-2" />
+         <div className="w-px h-5 md:h-8 bg-white/10 mx-1 md:mx-2 shrink-0" />
 
          {/* Phase 5 Soru Sor Protocol (Mic) */}
-         <button onClick={requestMic} className={`relative p-4 rounded-full font-bold shadow-xl transition-all flex items-center justify-center space-x-2 ${micTimer ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.5)]' : 'bg-primary/20 hover:bg-primary/40 text-primary border border-primary/20'}`}>
+         <button onClick={requestMic} className={`relative shrink-0 p-2.5 md:p-4 rounded-full font-bold shadow-xl transition-all flex items-center justify-center md:space-x-2 ${micTimer ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.5)]' : 'bg-primary/20 hover:bg-primary/40 text-primary border border-primary/20'}`}>
              {micTimer ? (
-                 <motion.span initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} className="font-mono text-sm font-bold tracking-widest absolute -top-10 left-1/2 -translate-x-1/2 bg-red-600/90 backdrop-blur-xl text-white px-3 py-1 rounded-full shadow-2xl border border-red-400/50 whitespace-nowrap">
+                 <motion.span initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} className="font-mono text-[10px] md:text-sm font-bold tracking-widest absolute -top-8 md:-top-10 left-1/2 -translate-x-1/2 bg-red-600/90 backdrop-blur-xl text-white px-2 py-0.5 md:px-3 md:py-1 rounded-full shadow-2xl border border-red-400/50 whitespace-nowrap">
                      00:{micTimer.toString().padStart(2, '0')}
                  </motion.span>
              ) : null}
-             {micTimer ? <Mic className="w-5 h-5 relative z-10" /> : <MicOff className="w-5 h-5 relative z-10" />}
+             {micTimer ? <Mic className="w-4 h-4 md:w-5 md:h-5 relative z-10" /> : <MicOff className="w-4 h-4 md:w-5 md:h-5 relative z-10" />}
          </button>
 
-         <div className="w-px h-8 bg-white/10 mx-2" />
+         <div className="w-px h-5 md:h-8 bg-white/10 mx-1 md:mx-2 shrink-0" />
 
          {/* Whiteboard Toggle */}
-         <button onClick={toggleWhiteboard} className={`p-4 rounded-full transition-all text-white ${isWhiteboardOpen ? 'bg-accent shadow-[0_0_20px_rgba(236,72,153,0.5)]' : 'bg-white/10 hover:bg-white/20'}`}>
-             <Edit3 className="w-5 h-5" />
+         <button onClick={toggleWhiteboard} className={`shrink-0 p-2.5 md:p-4 rounded-full transition-all flex items-center justify-center text-white ${isWhiteboardOpen ? 'bg-accent shadow-[0_0_20px_rgba(236,72,153,0.5)]' : 'bg-white/10 hover:bg-white/20'}`}>
+             <Edit3 className="w-4 h-4 md:w-5 md:h-5" />
          </button>
 
          {/* Chat Toggle */}
-         <button onClick={toggleChat} className="p-4 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all ml-2 relative">
-             <MessageSquareText className="w-5 h-5" />
+         <button onClick={toggleChat} className="shrink-0 p-2.5 md:p-4 flex items-center justify-center bg-white/10 hover:bg-white/20 text-white rounded-full transition-all ml-0 md:ml-2 relative">
+             <MessageSquareText className="w-4 h-4 md:w-5 md:h-5" />
              {unreadChatCount > 0 && (
-                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full animate-bounce shadow-lg z-50">
+                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] md:text-[10px] font-bold w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full animate-bounce shadow-lg z-50">
                      {unreadChatCount}
                  </span>
              )}
          </button>
 
-         <div className="w-px h-8 bg-white/10 mx-2" />
+         <div className="w-px h-5 md:h-8 bg-white/10 mx-1 md:mx-2 shrink-0" />
          
-         <button onClick={requestBreak} className="px-6 py-4 bg-background/50 hover:bg-white/10 text-white rounded-full font-semibold transition-all border border-white/5 flex items-center space-x-2">
-             <Hand className="w-4 h-4"/> <span>Mola İste</span>
+         <button onClick={requestBreak} className="shrink-0 px-3 py-2 md:px-6 md:py-4 bg-background/50 hover:bg-white/10 text-white rounded-full font-semibold transition-all border border-white/5 flex items-center space-x-1.5 md:space-x-2">
+             <Hand className="w-4 h-4"/> <span className="text-[10px] md:text-base">Mola İste</span>
          </button>
       </div>
     </div>
@@ -106,22 +106,22 @@ function BottomControlBar({ micTimer, requestMic, requestBreak, toggleWhiteboard
 function TracksRenderer({ isWhiteboardOpen }: { isWhiteboardOpen: boolean }) {
     const videoTracks = useTracks([Track.Source.Camera]);
     return (
-        <motion.div layout className={`flex w-full relative z-30 ${isWhiteboardOpen ? 'gap-[140px] h-[160px] justify-center items-start mb-6 mt-4' : 'gap-6 flex-1 items-center justify-center'}`}>
+        <motion.div layout className={`flex w-full relative z-30 ${isWhiteboardOpen ? 'gap-4 md:gap-[140px] h-[100px] md:h-[160px] justify-center items-start mb-6 mt-4' : 'flex-col md:flex-row gap-4 md:gap-6 flex-1 items-center justify-center'}`}>
              <AnimatePresence>
              {videoTracks.map((track) => (
-                 <motion.div layout key={track.participant.identity} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} transition={{stiffness: 200, damping: 20}} className={`relative rounded-[2rem] overflow-hidden glass-panel border border-white/10 bg-background shadow-2xl group ${isWhiteboardOpen ? 'w-[284px] h-[160px]' : 'aspect-video w-full max-w-3xl'}`}>
+                 <motion.div layout key={track.participant.identity} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} transition={{stiffness: 200, damping: 20}} className={`relative rounded-3xl md:rounded-[2rem] overflow-hidden glass-panel border border-white/10 bg-zinc-900/50 shadow-2xl group ${isWhiteboardOpen ? 'w-1/2 md:w-[284px] h-full md:h-[160px]' : 'w-full flex-1 md:flex-none md:aspect-video md:w-full md:max-w-3xl min-h-[0]'}`}>
                      <VideoTrack trackRef={track} className="w-full h-full object-cover transform" />
                      {/* Overlay */}
                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
                      
-                     <div className="absolute bottom-4 left-4 bg-background/40 px-4 py-2 rounded-2xl text-xs font-bold font-mono tracking-wider text-white backdrop-blur-xl border border-white/5 flex items-center space-x-3 shadow-2xl">
+                     <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 bg-background/40 px-3 py-1.5 md:px-4 md:py-2 rounded-2xl text-[10px] md:text-xs font-bold font-mono tracking-wider text-white backdrop-blur-xl border border-white/5 flex items-center space-x-2 md:space-x-3 shadow-2xl">
                          {/* Connection Dot */}
                          <div className="relative">
                             <div className="w-2 h-2 bg-green-500 rounded-full" />
                             <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-50" />
                          </div>
-                         <span>{track.participant.name || track.participant.identity}</span>
-                         {!track.participant.isMicrophoneEnabled ? <MicOff className="w-3.5 h-3.5 text-red-400" /> : <Mic className="w-3.5 h-3.5 text-green-400 animate-pulse" />}
+                         <span className="truncate max-w-[100px] md:max-w-none">{track.participant.name || track.participant.identity}</span>
+                         {!track.participant.isMicrophoneEnabled ? <MicOff className="w-3 h-3 md:w-3.5 md:h-3.5 text-red-400 shrink-0" /> : <Mic className="w-3 h-3 md:w-3.5 md:h-3.5 text-green-400 animate-pulse shrink-0" />}
                      </div>
                  </motion.div>
              ))}
@@ -229,11 +229,11 @@ function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard,
   return (
       <>
         {/* Neon Central Timer Layout V2 */}
-        <motion.div layout className={`absolute transition-all duration-700 z-40 left-1/2 -translate-x-1/2 ${isWhiteboardOpen ? 'top-6 scale-[0.65] origin-top' : 'top-10 scale-100 origin-top'}`}>
-          <div className="flex flex-col items-center justify-center p-[2px] rounded-full bg-gradient-to-r from-accent via-primary to-accent shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_50px_rgba(236,72,153,0.5)] transition-shadow">
-             <div className="flex items-center space-x-3 bg-background rounded-full px-8 py-3">
-                <Clock className="w-5 h-5 text-accent animate-pulse" />
-                <span className="font-mono text-3xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">{currentDurationFormatted}</span>
+        <motion.div layout className={`absolute transition-all duration-700 z-40 left-1/2 -translate-x-1/2 ${isWhiteboardOpen ? 'top-2 md:top-6 scale-75 md:scale-[0.65] origin-top' : 'top-4 md:top-10 scale-100 origin-top'}`}>
+          <div className="flex flex-col items-center justify-center p-[2px] rounded-full bg-gradient-to-r from-accent via-primary to-accent shadow-[0_0_20px_rgba(139,92,246,0.3)] md:shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_50px_rgba(236,72,153,0.5)] transition-shadow">
+             <div className="flex items-center space-x-2 md:space-x-3 bg-background rounded-full px-5 py-2 md:px-8 md:py-3">
+                <Clock className="w-4 h-4 md:w-5 md:h-5 text-accent animate-pulse" />
+                <span className="font-mono text-xl md:text-3xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">{currentDurationFormatted}</span>
              </div>
           </div>
         </motion.div>
@@ -302,9 +302,13 @@ function RoomContent() {
       if (data) {
           setProfile(data);
           // Request LiveKit Token
+          const roomNameStr = Array.isArray(id) ? id[0] : id;
           const res = await fetch('/api/livekit/token', {
               method: 'POST',
-              body: JSON.stringify({ roomName: id, participantIdentity: session.user.id, participantName: data.full_name || 'Öğrenci' })
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ roomName: roomNameStr, participantIdentity: session.user.id, participantName: data.full_name || 'Öğrenci' })
           });
           if(res.ok) {
               setToken((await res.json()).token);
@@ -512,7 +516,7 @@ function RoomContent() {
              <div className="flex-1 flex items-center justify-center">
                  <div className="flex flex-col items-center">
                     <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin shadow-[0_0_30px_rgba(139,92,246,0.3)] mb-4"></div>
-                    <span className="text-muted-foreground uppercase tracking-widest text-xs font-bold animate-pulse">Uzay Üssü Hazırlanıyor...</span>
+                    <span className="text-muted-foreground uppercase tracking-widest text-xs font-bold animate-pulse">Odak ortamı hazırlanıyor...</span>
                  </div>
              </div>
          )}
