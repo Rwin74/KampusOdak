@@ -184,9 +184,8 @@ function BottomControlBar({ micTimer, requestMic, requestBreak, toggleWhiteboard
   );
 }
 
-function TracksRenderer({ isWhiteboardOpen }: { isWhiteboardOpen: boolean }) {
+function TracksRenderer({ isWhiteboardOpen, fullscreenId, setFullscreenId }: { isWhiteboardOpen: boolean, fullscreenId: string | null, setFullscreenId: (id: string | null) => void }) {
     const videoTracks = useTracks([Track.Source.Camera]);
-    const [fullscreenId, setFullscreenId] = useState<string | null>(null);
 
     return (
         <motion.div layout className={`flex w-full h-full relative z-30 ${isWhiteboardOpen ? 'gap-4 md:gap-[140px] h-[100px] md:h-[160px] justify-center items-start mb-6 mt-4' : 'flex-col md:flex-row gap-2 md:gap-6 flex-1 items-center justify-center'}`}>
@@ -234,7 +233,7 @@ function TracksRenderer({ isWhiteboardOpen }: { isWhiteboardOpen: boolean }) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard, toggleChat, isChatOpen, leaveRoom, cellId, category }: any) {
+function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard, toggleChat, isChatOpen, leaveRoom, cellId, category, isFullscreen }: any) {
   const room = useRoomContext();
   const { localParticipant } = useLocalParticipant();
   const [timeLeft, setTimeLeft] = useState(duration * 60);
@@ -330,7 +329,7 @@ function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard,
   return (
       <>
         {/* Neon Central Timer Layout V2 */}
-        <motion.div layout className={`absolute transition-all duration-700 z-40 left-1/2 -translate-x-1/2 ${isWhiteboardOpen ? 'top-2 md:top-6 scale-75 md:scale-[0.65] origin-top' : 'top-1/2 -translate-y-1/2 md:top-10 md:translate-y-0 scale-100 origin-center md:origin-top'}`}>
+        <motion.div layout className={`absolute transition-all duration-700 z-[70] left-1/2 -translate-x-1/2 ${isFullscreen ? 'top-4 md:top-6 scale-75 md:scale-[0.8] origin-top' : (isWhiteboardOpen ? 'top-2 md:top-6 scale-75 md:scale-[0.65] origin-top' : 'top-1/2 -translate-y-1/2 md:top-10 md:translate-y-0 scale-100 origin-center md:origin-top')}`}>
           <div className="flex flex-col items-center justify-center p-[2px] rounded-full bg-gradient-to-r from-accent via-primary to-accent shadow-[0_0_20px_rgba(139,92,246,0.3)] md:shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_50px_rgba(236,72,153,0.5)] transition-shadow">
              <div className="flex items-center space-x-2 md:space-x-3 bg-background rounded-full px-5 py-2 md:px-8 md:py-3">
                 <Clock className="w-4 h-4 md:w-5 md:h-5 text-accent animate-pulse" />
@@ -384,6 +383,7 @@ function RoomContent() {
   const [breakTimeRemaining, setBreakTimeRemaining] = useState(0);
   const [isWhiteboardOpen, setIsWhiteboardOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [fullscreenId, setFullscreenId] = useState<string | null>(null);
   
   const duration = parseInt(searchParams?.get('duration') || '50');
   const category = searchParams?.get('category') || 'Genel';
@@ -600,12 +600,13 @@ function RoomContent() {
                       leaveRoom={leaveRoom}
                       cellId={Array.isArray(id) ? id[0].slice(0,6) : id?.slice(0,6)}
                       category={category}
+                      isFullscreen={!!fullscreenId}
                   />
                   
                   {/* Dynamic Layout Engine */}
                   <div className="flex flex-col flex-1 relative w-full h-full">
                       {/* Cameras Area */}
-                      <TracksRenderer isWhiteboardOpen={isWhiteboardOpen} />
+                      <TracksRenderer isWhiteboardOpen={isWhiteboardOpen} fullscreenId={fullscreenId} setFullscreenId={setFullscreenId} />
                       
                       {/* Whiteboard Area */}
                       <AnimatePresence>
