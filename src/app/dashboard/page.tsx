@@ -235,23 +235,23 @@ export default function Dashboard() {
       {/* Main Container */}
       <div className="flex-1 flex flex-col relative overflow-y-auto">
         {/* Header */}
-        <header className="p-6 flex justify-end items-center relative z-10 border-b border-white/5 bg-background/50 backdrop-blur-md">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center bg-white/5 border border-white/10 rounded-full px-5 py-2 text-sm font-medium hidden sm:flex">
-              <span className="flex items-center space-x-1"><Flame className="w-4 h-4 text-orange-400" /> <span>{profile.streak} Gün Serisi</span></span>
-              <span className="text-white/20 px-3">|</span>
-              <span className="flex items-center space-x-1"><Timer className="w-4 h-4 text-accent" /> <span>{profile.total_hours} Saat Toplam Odak</span></span>
-              <span className="text-white/20 px-3">|</span>
-              <span className="flex items-center space-x-1"><Star className="w-4 h-4 text-yellow-400" /> <span className="w-20 text-left">{profile.xp || 0} Toplam XP</span></span>
+        <header className="px-4 py-4 sm:p-6 flex justify-end items-center relative z-10 border-b border-white/5 bg-background/50 backdrop-blur-md">
+          <div className="flex items-center space-x-2 sm:space-x-6">
+            <div className="flex items-center bg-white/5 border border-white/10 rounded-full px-3 py-1.5 sm:px-5 sm:py-2 text-[10px] sm:text-sm font-medium">
+              <span className="flex items-center space-x-1 whitespace-nowrap"><Flame className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-400" /> <span>{profile.streak} <span className="hidden sm:inline">Gün Serisi</span><span className="sm:hidden">Gün</span></span></span>
+              <span className="text-white/20 px-1.5 sm:px-3">|</span>
+              <span className="flex items-center space-x-1 whitespace-nowrap"><Timer className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent" /> <span>{profile.total_hours} <span className="hidden sm:inline">Saat Toplam Odak</span><span className="sm:hidden">Saat</span></span></span>
+              <span className="text-white/20 px-1.5 sm:px-3">|</span>
+              <span className="flex items-center space-x-1 whitespace-nowrap"><Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400" /> <span className="w-auto sm:w-20 text-left">{profile.xp || 0} <span className="hidden sm:inline">Toplam </span>XP</span></span>
             </div>
             
             {/* Mobile Menu Actions */}
-            <div className="md:hidden flex items-center space-x-3 border-l border-white/20 pl-4">
+            <div className="md:hidden flex items-center space-x-2 sm:space-x-3 border-l border-white/20 pl-2 sm:pl-4">
               <button onClick={() => router.push("/profile")} className="text-muted-foreground hover:text-white transition">
-                <User className="w-5 h-5" />
+                <User className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
-              <button onClick={async () => { await supabase.auth.signOut(); router.push("/"); }} className="text-muted-foreground hover:text-red-400 transition ml-2">
-                <LogOut className="w-5 h-5" />
+              <button onClick={async () => { await supabase.auth.signOut(); router.push("/"); }} className="text-muted-foreground hover:text-red-400 transition ml-1 sm:ml-2">
+                <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>
