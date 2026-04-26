@@ -81,13 +81,14 @@ export default function Home() {
             router.push("/dashboard");
           } else {
             // Force sign in if session was not returned immediately
-            const { data: signInData } = await supabase.auth.signInWithPassword({
+            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
               email,
               password,
             });
             if (signInData.session) {
               router.push("/dashboard");
             } else {
+              console.error("Auto-login error:", signInError);
               alert("Kayıt başarılı! Lütfen giriş yapın.");
               setIsLogin(true);
             }

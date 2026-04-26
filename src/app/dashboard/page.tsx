@@ -256,7 +256,7 @@ export default function Dashboard() {
 
   if (!profile) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
 
-  if (profile.onboarding_completed === false) {
+  if (!profile.onboarding_completed) {
     return <OnboardingWizard profile={profile} onComplete={(data) => {
       setProfile({ ...profile, onboarding_completed: true, focus_targets: data.focusTargets, education_level: data.educationLevel, daily_goal: data.dailyGoal });
       if (data.focusTargets && data.focusTargets.length > 0) {
