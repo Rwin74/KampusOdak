@@ -34,7 +34,7 @@ export default function AmbientAudio() {
   };
 
   return (
-    <div className="flex items-center bg-background/40 border border-white/10 rounded-full p-2 space-x-2 backdrop-blur-md shadow-lg">
+    <div className="flex items-center bg-zinc-900/90 border border-white/20 rounded-full p-2 md:p-3 space-x-1 md:space-x-2 backdrop-blur-xl shadow-2xl">
        <audio ref={audioRef} loop />
        {SOUNDS.map(s => {
           const Icon = s.icon;
@@ -44,17 +44,17 @@ export default function AmbientAudio() {
                 key={s.id} 
                 onClick={() => toggleSound(s)} 
                 title={s.name}
-                className={`p-2 rounded-full transition-all duration-300 ${isActive ? 'bg-primary text-white shadow-[0_0_15px_rgba(139,92,246,0.5)]' : 'text-muted-foreground hover:bg-white/10 hover:text-white'}`}
+                className={`p-2 rounded-full transition-all duration-300 ${isActive ? 'bg-primary text-white shadow-[0_0_15px_rgba(139,92,246,0.5)]' : 'text-zinc-400 hover:bg-white/20 hover:text-white'}`}
             >
-               <Icon className="w-5 h-5" />
+               <Icon className="w-4 h-4 md:w-5 md:h-5" />
             </button>
           )
        })}
-       <div className="w-px h-6 bg-white/10 mx-2" />
+       <div className="w-px h-6 bg-white/20 mx-1 md:mx-2" />
        <input 
          type="range" min="0" max="1" step="0.05" 
          value={volume} onChange={e => setVolume(parseFloat(e.target.value))} 
-         className="w-20 accent-primary opacity-70 hover:opacity-100 transition-opacity"
+         className="w-16 md:w-20 accent-primary opacity-90 hover:opacity-100 transition-opacity"
          title="Ses Seviyesi"
        />
     </div>

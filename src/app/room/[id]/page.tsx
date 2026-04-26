@@ -35,7 +35,7 @@ const playNotifySound = () => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function BottomControlBar({ micTimer, requestMic, requestBreak, toggleWhiteboard, isWhiteboardOpen, toggleChat, unreadChatCount }: any) {
+function BottomControlBar({ micTimer, requestMic, requestBreak, toggleWhiteboard, isWhiteboardOpen, toggleChat, unreadChatCount, leaveRoom, cellId, category }: any) {
   useLocalParticipant();
   const [showSettings, setShowSettings] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -110,6 +110,17 @@ function BottomControlBar({ micTimer, requestMic, requestBreak, toggleWhiteboard
             {mobileMenuOpen && (
                <motion.div initial={{ opacity: 0, scale: 0.9, y: 20, transformOrigin: 'bottom right' }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }} className="bg-zinc-900/95 backdrop-blur-3xl border border-white/10 rounded-3xl p-4 shadow-2xl flex flex-col space-y-4 w-56 mb-2 mr-2">
                    {/* Mobile Controls */}
+                   <div className="flex items-center justify-between mb-1">
+                       <div className="flex flex-col">
+                           <span className="text-xs font-bold text-white tracking-wider flex items-center space-x-1.5"><Users className="w-3.5 h-3.5 text-primary" /> <span>Hücre: {cellId}</span></span>
+                           <span className="text-[10px] text-primary/70 uppercase font-bold ml-5">{category}</span>
+                       </div>
+                       <button onClick={leaveRoom} className="p-2 bg-red-500/20 text-red-400 rounded-xl hover:bg-red-500 hover:text-white transition-all">
+                           <LogOut className="w-4 h-4" />
+                       </button>
+                   </div>
+                   <div className="h-px bg-white/10 w-full mb-1" />
+
                    <div className="flex items-center justify-between">
                        <span className="text-xs font-bold text-white tracking-wider uppercase ml-1">Kamera</span>
                        <div className="flex items-center space-x-3">
@@ -175,16 +186,36 @@ function BottomControlBar({ micTimer, requestMic, requestBreak, toggleWhiteboard
 
 function TracksRenderer({ isWhiteboardOpen }: { isWhiteboardOpen: boolean }) {
     const videoTracks = useTracks([Track.Source.Camera]);
+    const [fullscreenId, setFullscreenId] = useState<string | null>(null);
+
     return (
-        <motion.div layout className={`flex w-full relative z-30 ${isWhiteboardOpen ? 'gap-4 md:gap-[140px] h-[100px] md:h-[160px] justify-center items-start mb-6 mt-4' : 'flex-col md:flex-row gap-4 md:gap-6 flex-1 items-center justify-center'}`}>
+        <motion.div layout className={`flex w-full h-full relative z-30 ${isWhiteboardOpen ? 'gap-4 md:gap-[140px] h-[100px] md:h-[160px] justify-center items-start mb-6 mt-4' : 'flex-col md:flex-row gap-2 md:gap-6 flex-1 items-center justify-center'}`}>
              <AnimatePresence>
-             {videoTracks.map((track) => (
-                 <motion.div layout key={track.participant.identity} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} transition={{stiffness: 200, damping: 20}} className={`relative rounded-3xl md:rounded-[2rem] overflow-hidden glass-panel border border-white/10 bg-zinc-900/50 shadow-2xl group ${isWhiteboardOpen ? 'w-1/2 md:w-[284px] h-full md:h-[160px]' : 'w-full flex-1 md:flex-none md:aspect-video md:w-full md:max-w-3xl min-h-[0]'}`}>
-                     <VideoTrack trackRef={track} className="w-full h-full object-cover transform" />
+             {videoTracks.map((track) => {
+                 const isFullscreen = fullscreenId === track.participant.identity;
+                 const hidden = fullscreenId && !isFullscreen;
+
+                 return (
+                 <motion.div 
+                    layout 
+                    key={track.participant.identity} 
+                    onClick={() => setFullscreenId(isFullscreen ? null : track.participant.identity)}
+                    initial={{ opacity: 0, scale: 0.8 }} 
+                    animate={{ opacity: 1, scale: 1 }} 
+                    exit={{ opacity: 0, scale: 0.8 }} 
+                    transition={{stiffness: 200, damping: 20}} 
+                    className={`relative overflow-hidden glass-panel border border-white/10 bg-zinc-900/50 shadow-2xl group transition-all duration-300 cursor-pointer ${
+                        isFullscreen ? 'absolute inset-0 z-[60] rounded-2xl md:rounded-[3rem] m-0' : (
+                            hidden ? 'hidden' : (
+                                isWhiteboardOpen ? 'rounded-3xl md:rounded-[2rem] w-1/2 md:w-[284px] h-full md:h-[160px]' : 'rounded-3xl md:rounded-[2rem] flex-1 basis-0 min-h-0 w-full md:h-auto md:w-full md:aspect-video md:max-w-3xl'
+                            )
+                        )
+                    }`}>
+                     <VideoTrack trackRef={track} className="w-full h-full object-cover transform pointer-events-none" />
                      {/* Overlay */}
                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
                      
-                     <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 bg-background/40 px-3 py-1.5 md:px-4 md:py-2 rounded-2xl text-[10px] md:text-xs font-bold font-mono tracking-wider text-white backdrop-blur-xl border border-white/5 flex items-center space-x-2 md:space-x-3 shadow-2xl">
+                     <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 bg-background/60 px-3 py-1.5 md:px-4 md:py-2 rounded-2xl text-[10px] md:text-xs font-bold font-mono tracking-wider text-white backdrop-blur-xl border border-white/10 flex items-center space-x-2 md:space-x-3 shadow-2xl">
                          {/* Connection Dot */}
                          <div className="relative">
                             <div className="w-2 h-2 bg-green-500 rounded-full" />
@@ -194,7 +225,7 @@ function TracksRenderer({ isWhiteboardOpen }: { isWhiteboardOpen: boolean }) {
                          {!track.participant.isMicrophoneEnabled ? <MicOff className="w-3 h-3 md:w-3.5 md:h-3.5 text-red-400 shrink-0" /> : <Mic className="w-3 h-3 md:w-3.5 md:h-3.5 text-green-400 animate-pulse shrink-0" />}
                      </div>
                  </motion.div>
-             ))}
+             )})}
              </AnimatePresence>
              {/* Audio Rendering Engine */}
              <RoomAudioRenderer />
@@ -203,7 +234,7 @@ function TracksRenderer({ isWhiteboardOpen }: { isWhiteboardOpen: boolean }) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard, toggleChat, isChatOpen }: any) {
+function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard, toggleChat, isChatOpen, leaveRoom, cellId, category }: any) {
   const room = useRoomContext();
   const { localParticipant } = useLocalParticipant();
   const [timeLeft, setTimeLeft] = useState(duration * 60);
@@ -299,7 +330,7 @@ function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard,
   return (
       <>
         {/* Neon Central Timer Layout V2 */}
-        <motion.div layout className={`absolute transition-all duration-700 z-40 left-1/2 -translate-x-1/2 ${isWhiteboardOpen ? 'top-2 md:top-6 scale-75 md:scale-[0.65] origin-top' : 'top-4 md:top-10 scale-100 origin-top'}`}>
+        <motion.div layout className={`absolute transition-all duration-700 z-40 left-1/2 -translate-x-1/2 ${isWhiteboardOpen ? 'top-2 md:top-6 scale-75 md:scale-[0.65] origin-top' : 'top-1/2 -translate-y-1/2 md:top-10 md:translate-y-0 scale-100 origin-center md:origin-top'}`}>
           <div className="flex flex-col items-center justify-center p-[2px] rounded-full bg-gradient-to-r from-accent via-primary to-accent shadow-[0_0_20px_rgba(139,92,246,0.3)] md:shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_50px_rgba(236,72,153,0.5)] transition-shadow">
              <div className="flex items-center space-x-2 md:space-x-3 bg-background rounded-full px-5 py-2 md:px-8 md:py-3">
                 <Clock className="w-4 h-4 md:w-5 md:h-5 text-accent animate-pulse" />
@@ -333,6 +364,9 @@ function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard,
             isWhiteboardOpen={isWhiteboardOpen}
             toggleChat={toggleChat}
             unreadChatCount={unreadChatCount}
+            leaveRoom={leaveRoom}
+            cellId={cellId}
+            category={category}
         />
       </>
   )
@@ -515,7 +549,7 @@ function RoomContent() {
         )}
       </AnimatePresence>
 
-      <header className="p-6 flex justify-between items-start relative z-50">
+      <header className="hidden md:flex p-6 justify-between items-start relative z-50">
         <div className="flex items-center space-x-4">
           <button onClick={leaveRoom} className="p-4 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-muted-foreground hover:text-white transition-all group shadow-2xl backdrop-blur-md">
             <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
@@ -527,11 +561,11 @@ function RoomContent() {
         </div>
       </header>
 
-      <div className="fixed bottom-6 left-6 z-50">
+      <div className="fixed bottom-4 left-4 md:bottom-6 md:left-6 z-50">
          <AmbientAudio />
       </div>
 
-      <main className="flex-1 w-full max-w-[1800px] mx-auto p-4 md:p-8 flex flex-col relative z-10 md:pb-24 pb-4 overflow-hidden">
+      <main className="flex-1 w-full max-w-[1800px] mx-auto p-2 md:p-8 flex flex-col relative z-10 md:pb-24 pb-2 overflow-hidden">
          {token && liveKitUrl ? (
              <LiveKitRoom 
                  video={true} 
@@ -563,6 +597,9 @@ function RoomContent() {
                       toggleWhiteboard={() => setIsWhiteboardOpen(!isWhiteboardOpen)}
                       toggleChat={() => setIsChatOpen(!isChatOpen)}
                       isChatOpen={isChatOpen}
+                      leaveRoom={leaveRoom}
+                      cellId={Array.isArray(id) ? id[0].slice(0,6) : id?.slice(0,6)}
+                      category={category}
                   />
                   
                   {/* Dynamic Layout Engine */}
