@@ -148,7 +148,6 @@ export default function Home() {
 
           <div className="text-center mb-8">
             <h2 className="text-2xl font-semibold mb-2">Platforma Giriş Yap</h2>
-            <p className="text-sm text-muted-foreground">VIP oturumunuza erişmek için bilgilerinizi girin.</p>
           </div>
 
           {error && (
