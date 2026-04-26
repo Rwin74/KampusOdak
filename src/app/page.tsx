@@ -132,12 +132,11 @@ export default function Home() {
               border: '2.5px solid rgba(255,255,255,0.75)',
               borderRadius: '16px',
               padding: '0.18em 0.55em 0.18em 0.3em',
-              backdropFilter: 'blur(4px)',
-              background: 'rgba(255,255,255,0.06)',
+              background: '#ffffff',
               gap: '0.12em',
             }}
           >
-            <h1 className="text-5xl lg:text-7xl font-bold tracking-tight text-foreground flex items-center" style={{ margin: 0 }}>
+            <h1 className="text-5xl lg:text-7xl font-bold tracking-tight flex items-center" style={{ margin: 0, color: '#1c2e5e' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/logo.png"
@@ -150,7 +149,7 @@ export default function Home() {
                   marginRight: '0.05em',
                 }}
               />
-              ampus<span className="text-primary">Odak</span>
+              ampus<span style={{ color: '#f59e0b' }}>Odak</span>
             </h1>
           </div>
           
