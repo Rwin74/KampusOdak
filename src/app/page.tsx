@@ -129,11 +129,11 @@ export default function Home() {
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              border: '2px solid rgba(255,255,255,0.18)',
+              border: '2.5px solid rgba(255,255,255,0.75)',
               borderRadius: '16px',
               padding: '0.18em 0.55em 0.18em 0.3em',
               backdropFilter: 'blur(4px)',
-              background: 'rgba(255,255,255,0.04)',
+              background: 'rgba(255,255,255,0.06)',
               gap: '0.12em',
             }}
           >
