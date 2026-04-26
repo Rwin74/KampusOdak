@@ -105,28 +105,28 @@ function BottomControlBar({ micTimer, requestMic, requestBreak, toggleWhiteboard
     </div>
 
     {/* Mobile Floating Menu Button */}
-    <div className="md:hidden fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-3">
+    <div className="md:hidden fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end space-y-2 sm:space-y-3">
         <AnimatePresence>
             {mobileMenuOpen && (
-               <motion.div initial={{ opacity: 0, scale: 0.9, y: 20, transformOrigin: 'bottom right' }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }} className="bg-zinc-900/95 backdrop-blur-3xl border border-white/10 rounded-3xl p-4 shadow-2xl flex flex-col space-y-4 w-56 mb-2 mr-2">
+               <motion.div initial={{ opacity: 0, scale: 0.9, y: 20, transformOrigin: 'bottom right' }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }} className="bg-zinc-900/95 backdrop-blur-3xl border border-white/10 rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-2xl flex flex-col space-y-3 sm:space-y-4 w-48 sm:w-56 mb-2 mr-0 sm:mr-2">
                    {/* Mobile Controls */}
                    <div className="flex items-center justify-between mb-1">
                        <div className="flex flex-col">
-                           <span className="text-xs font-bold text-white tracking-wider flex items-center space-x-1.5"><Users className="w-3.5 h-3.5 text-primary" /> <span>Hücre: {cellId}</span></span>
-                           <span className="text-[10px] text-primary/70 uppercase font-bold ml-5">{category}</span>
+                           <span className="text-[10px] sm:text-xs font-bold text-white tracking-wider flex items-center space-x-1.5"><Users className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" /> <span>Hücre: {cellId}</span></span>
+                           <span className="text-[9px] sm:text-[10px] text-primary/70 uppercase font-bold ml-4 sm:ml-5">{category}</span>
                        </div>
-                       <button onClick={leaveRoom} className="p-2 bg-red-500/20 text-red-400 rounded-xl hover:bg-red-500 hover:text-white transition-all">
-                           <LogOut className="w-4 h-4" />
+                       <button onClick={leaveRoom} className="p-1.5 sm:p-2 bg-red-500/20 text-red-400 rounded-lg sm:rounded-xl hover:bg-red-500 hover:text-white transition-all">
+                           <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                        </button>
                    </div>
                    <div className="h-px bg-white/10 w-full mb-1" />
 
                    <div className="flex items-center justify-between">
-                       <span className="text-xs font-bold text-white tracking-wider uppercase ml-1">Kamera</span>
-                       <div className="flex items-center space-x-3">
-                           <TrackToggle source={Track.Source.Camera} showIcon={true} className="p-2.5 rounded-full bg-white/10 text-white data-[state=off]:bg-red-500/20 data-[state=off]:text-red-400" />
-                           <button onClick={() => setShowSettings(!showSettings)} className="p-2.5 bg-zinc-800 rounded-full text-white">
-                               <Settings className="w-4 h-4" />
+                       <span className="text-[10px] sm:text-xs font-bold text-white tracking-wider uppercase ml-1">Kamera</span>
+                       <div className="flex items-center space-x-2 sm:space-x-3">
+                           <TrackToggle source={Track.Source.Camera} showIcon={true} className="p-2 sm:p-2.5 rounded-full bg-white/10 text-white data-[state=off]:bg-red-500/20 data-[state=off]:text-red-400" />
+                           <button onClick={() => setShowSettings(!showSettings)} className="p-2 sm:p-2.5 bg-zinc-800 rounded-full text-white">
+                               <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                            </button>
                        </div>
                    </div>
@@ -134,47 +134,47 @@ function BottomControlBar({ micTimer, requestMic, requestBreak, toggleWhiteboard
                    {/* Settings Popover inside mobile menu */}
                    <AnimatePresence>
                    {showSettings && (
-                       <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="bg-zinc-950 border border-white/5 p-3 rounded-2xl overflow-hidden">
-                            <h4 className="text-[10px] text-muted-foreground uppercase font-bold mb-2 tracking-widest">Kamera Seçimi</h4>
-                            <MediaDeviceMenu kind="videoinput" className="w-full bg-background border border-white/10 rounded-xl px-2 py-2 text-xs text-white focus:outline-none mb-3" />
-                            <h4 className="text-[10px] text-muted-foreground uppercase font-bold mb-2 tracking-widest">Mikrofon Seçimi</h4>
-                            <MediaDeviceMenu kind="audioinput" className="w-full bg-background border border-white/10 rounded-xl px-2 py-2 text-xs text-white focus:outline-none" />
+                       <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="bg-zinc-950 border border-white/5 p-2 sm:p-3 rounded-xl sm:rounded-2xl overflow-hidden">
+                            <h4 className="text-[9px] sm:text-[10px] text-muted-foreground uppercase font-bold mb-1.5 sm:mb-2 tracking-widest">Kamera Seçimi</h4>
+                            <MediaDeviceMenu kind="videoinput" className="w-full bg-background border border-white/10 rounded-lg sm:rounded-xl px-2 py-1.5 sm:py-2 text-[10px] sm:text-xs text-white focus:outline-none mb-2 sm:mb-3" />
+                            <h4 className="text-[9px] sm:text-[10px] text-muted-foreground uppercase font-bold mb-1.5 sm:mb-2 tracking-widest">Mikrofon Seçimi</h4>
+                            <MediaDeviceMenu kind="audioinput" className="w-full bg-background border border-white/10 rounded-lg sm:rounded-xl px-2 py-1.5 sm:py-2 text-[10px] sm:text-xs text-white focus:outline-none" />
                        </motion.div>
                    )}
                    </AnimatePresence>
 
                    <div className="h-px bg-white/10 w-full" />
 
-                   <button onClick={requestMic} className={`w-full py-3 rounded-2xl font-bold text-sm flex items-center justify-center space-x-2 transition-all ${micTimer ? 'bg-red-500 text-white' : 'bg-primary/20 text-primary border border-primary/20'}`}>
-                       {micTimer ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
+                   <button onClick={requestMic} className={`w-full py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all ${micTimer ? 'bg-red-500 text-white' : 'bg-primary/20 text-primary border border-primary/20'}`}>
+                       {micTimer ? <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <MicOff className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                        <span>{micTimer ? `Soru Sor (00:${micTimer.toString().padStart(2, '0')})` : 'Söz Hakkı İste'}</span>
                    </button>
                    
-                   <button onClick={() => { toggleWhiteboard(); setMobileMenuOpen(false); }} className={`w-full py-3 rounded-2xl font-bold text-sm flex items-center justify-center space-x-2 transition-all ${isWhiteboardOpen ? 'bg-accent text-white' : 'bg-white/10 text-white'}`}>
-                       <Edit3 className="w-4 h-4" />
+                   <button onClick={() => { toggleWhiteboard(); setMobileMenuOpen(false); }} className={`w-full py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all ${isWhiteboardOpen ? 'bg-accent text-white' : 'bg-white/10 text-white'}`}>
+                       <Edit3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                        <span>Beyaz Tahta</span>
                    </button>
                    
-                   <button onClick={() => { toggleChat(); setMobileMenuOpen(false); }} className="w-full py-3 rounded-2xl font-bold text-sm flex items-center justify-center space-x-2 transition-all bg-white/10 text-white relative">
-                       <MessageSquareText className="w-4 h-4" />
+                   <button onClick={() => { toggleChat(); setMobileMenuOpen(false); }} className="w-full py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all bg-white/10 text-white relative">
+                       <MessageSquareText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                        <span>Sohbet</span>
                        {unreadChatCount > 0 && (
-                           <span className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full ml-2">{unreadChatCount}</span>
+                           <span className="bg-red-500 text-white text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full ml-1.5 sm:ml-2">{unreadChatCount}</span>
                        )}
                    </button>
                    
-                   <button onClick={() => { requestBreak(); setMobileMenuOpen(false); }} className="w-full py-3 rounded-2xl font-bold text-sm flex items-center justify-center space-x-2 transition-all bg-background/50 border border-white/10 text-white hover:bg-white/10">
-                       <Hand className="w-4 h-4" />
+                   <button onClick={() => { requestBreak(); setMobileMenuOpen(false); }} className="w-full py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all bg-background/50 border border-white/10 text-white hover:bg-white/10">
+                       <Hand className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                        <span>Mola İste</span>
                    </button>
                </motion.div>
             )}
         </AnimatePresence>
 
-        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className={`p-4 rounded-full text-white shadow-[0_0_30px_rgba(139,92,246,0.3)] border border-white/10 relative transition-all duration-300 ${mobileMenuOpen ? 'bg-zinc-800 rotate-90' : 'bg-primary/80 backdrop-blur-xl'}`}>
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className={`p-3 sm:p-4 rounded-full text-white shadow-[0_0_30px_rgba(139,92,246,0.3)] border border-white/10 relative transition-all duration-300 ${mobileMenuOpen ? 'bg-zinc-800 rotate-90' : 'bg-primary/80 backdrop-blur-xl'}`}>
+            {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
             {unreadChatCount > 0 && !mobileMenuOpen && (
-                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-lg animate-bounce">
+                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] sm:text-[10px] font-bold w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center rounded-full shadow-lg animate-bounce">
                      {unreadChatCount}
                  </span>
             )}
@@ -188,7 +188,7 @@ function TracksRenderer({ isWhiteboardOpen, fullscreenId, setFullscreenId }: { i
     const videoTracks = useTracks([Track.Source.Camera]);
 
     return (
-        <motion.div layout className={`flex w-full h-full relative z-30 ${isWhiteboardOpen ? 'gap-4 md:gap-[140px] h-[100px] md:h-[160px] justify-center items-start mb-6 mt-4' : 'flex-col md:flex-row gap-2 md:gap-6 flex-1 items-center justify-center'}`}>
+        <motion.div layout className={`flex w-full h-full relative z-30 ${isWhiteboardOpen ? 'gap-2 sm:gap-4 md:gap-[140px] h-[100px] md:h-[160px] justify-center items-start mb-6 mt-4' : 'flex-col md:flex-row gap-1 sm:gap-2 md:gap-6 flex-1 items-center justify-center'}`}>
              <AnimatePresence>
              {videoTracks.map((track) => {
                  const isFullscreen = fullscreenId === track.participant.identity;
@@ -204,9 +204,9 @@ function TracksRenderer({ isWhiteboardOpen, fullscreenId, setFullscreenId }: { i
                     exit={{ opacity: 0, scale: 0.8 }} 
                     transition={{stiffness: 200, damping: 20}} 
                     className={`relative overflow-hidden glass-panel border border-white/10 bg-zinc-900/50 shadow-2xl group transition-all duration-300 cursor-pointer ${
-                        isFullscreen ? 'absolute inset-0 z-[60] rounded-2xl md:rounded-[3rem] m-0' : (
+                        isFullscreen ? 'absolute inset-0 z-[60] rounded-xl sm:rounded-2xl md:rounded-[3rem] m-0' : (
                             hidden ? 'hidden' : (
-                                isWhiteboardOpen ? 'rounded-3xl md:rounded-[2rem] w-1/2 md:w-[284px] h-full md:h-[160px]' : 'rounded-3xl md:rounded-[2rem] flex-1 basis-0 min-h-0 w-full md:h-auto md:w-full md:aspect-video md:max-w-3xl'
+                                isWhiteboardOpen ? 'rounded-2xl sm:rounded-3xl md:rounded-[2rem] w-1/2 md:w-[284px] h-full md:h-[160px]' : 'rounded-2xl sm:rounded-3xl md:rounded-[2rem] flex-1 basis-0 min-h-0 w-full md:h-auto md:w-full md:aspect-video md:max-w-3xl'
                             )
                         )
                     }`}>
@@ -214,14 +214,14 @@ function TracksRenderer({ isWhiteboardOpen, fullscreenId, setFullscreenId }: { i
                      {/* Overlay */}
                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
                      
-                     <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 bg-background/60 px-3 py-1.5 md:px-4 md:py-2 rounded-2xl text-[10px] md:text-xs font-bold font-mono tracking-wider text-white backdrop-blur-xl border border-white/10 flex items-center space-x-2 md:space-x-3 shadow-2xl">
+                     <div className="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 md:bottom-4 md:left-4 bg-background/60 px-2.5 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] md:text-xs font-bold font-mono tracking-wider text-white backdrop-blur-xl border border-white/10 flex items-center space-x-1.5 sm:space-x-2 md:space-x-3 shadow-2xl">
                          {/* Connection Dot */}
                          <div className="relative">
-                            <div className="w-2 h-2 bg-green-500 rounded-full" />
+                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full" />
                             <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-50" />
                          </div>
-                         <span className="truncate max-w-[100px] md:max-w-none">{track.participant.name || track.participant.identity}</span>
-                         {!track.participant.isMicrophoneEnabled ? <MicOff className="w-3 h-3 md:w-3.5 md:h-3.5 text-red-400 shrink-0" /> : <Mic className="w-3 h-3 md:w-3.5 md:h-3.5 text-green-400 animate-pulse shrink-0" />}
+                         <span className="truncate max-w-[80px] sm:max-w-[100px] md:max-w-none">{track.participant.name || track.participant.identity}</span>
+                         {!track.participant.isMicrophoneEnabled ? <MicOff className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 text-red-400 shrink-0" /> : <Mic className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-3.5 md:h-3.5 text-green-400 animate-pulse shrink-0" />}
                      </div>
                  </motion.div>
              )})}
@@ -329,7 +329,7 @@ function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard,
   return (
       <>
         {/* Neon Central Timer Layout V2 */}
-        <motion.div layout className={`absolute transition-all duration-700 z-[70] left-1/2 -translate-x-1/2 ${isFullscreen ? 'top-4 md:top-6 scale-75 md:scale-[0.8] origin-top' : (isWhiteboardOpen ? 'top-2 md:top-6 scale-75 md:scale-[0.65] origin-top' : 'top-1/2 -translate-y-1/2 md:top-10 md:translate-y-0 scale-100 origin-center md:origin-top')}`}>
+        <motion.div layout className={`absolute transition-all duration-700 z-[70] left-1/2 -translate-x-1/2 ${isFullscreen ? 'top-4 md:top-6 scale-50 sm:scale-75 md:scale-[0.8] origin-top' : (isWhiteboardOpen ? 'top-2 md:top-6 scale-50 sm:scale-75 md:scale-[0.65] origin-top' : 'top-1/2 -translate-y-1/2 md:top-10 md:translate-y-0 scale-75 sm:scale-100 origin-center md:origin-top')}`}>
           <div className="flex flex-col items-center justify-center p-[2px] rounded-full bg-gradient-to-r from-accent via-primary to-accent shadow-[0_0_20px_rgba(139,92,246,0.3)] md:shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_50px_rgba(236,72,153,0.5)] transition-shadow">
              <div className="flex items-center space-x-2 md:space-x-3 bg-background rounded-full px-5 py-2 md:px-8 md:py-3">
                 <Clock className="w-4 h-4 md:w-5 md:h-5 text-accent animate-pulse" />
