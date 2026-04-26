@@ -143,16 +143,28 @@ export default function Dashboard() {
         router.push("/");
         return;
       }
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", session.user.id).single();
-      if (error || !data) {
-        console.error("Error fetching profile, possibly banned or deleted:", error);
+      let profileData = null;
+      let retries = 5;
+      
+      while (retries > 0 && !profileData) {
+        const { data, error } = await supabase.from("profiles").select("*").eq("id", session.user.id).single();
+        if (data) {
+           profileData = data;
+        } else {
+           await new Promise(res => setTimeout(res, 500));
+           retries--;
+        }
+      }
+
+      if (!profileData) {
+        console.error("Error fetching profile, possibly banned or deleted");
         await supabase.auth.signOut();
         router.push("/");
         return;
       }
 
-      setProfile(data);
-      supabase.rpc('leave_pool', { p_user_id: data.id }).then();
+      setProfile(profileData);
+      supabase.rpc('leave_pool', { p_user_id: profileData.id }).then();
     };
     fetchUser();
   }, [router]);
