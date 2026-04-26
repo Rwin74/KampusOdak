@@ -208,7 +208,6 @@ function TracksRenderer({ isWhiteboardOpen, fullscreenId, setFullscreenId }: { i
     const videoTracks = useTracks([Track.Source.Camera]);
 
     return (
-    return (
         <motion.div layout className={`flex w-full h-full relative z-30 ${isWhiteboardOpen ? 'gap-2 sm:gap-4 md:gap-[140px] h-[100px] md:h-[160px] justify-center items-start mb-6 mt-4 overflow-x-auto' : 'flex-row flex-wrap content-center overflow-y-auto gap-2 sm:gap-4 md:gap-6 flex-1 items-center justify-center p-2 md:p-4'}`}>
              <AnimatePresence>
              {videoTracks.map((track) => {
