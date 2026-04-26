@@ -77,8 +77,21 @@ export default function Home() {
           // NOT: Davetiye aktifleştirme (is_active = false) ve Kurum (dershane_id) atama işlemleri
           // artık Supabase tarafında (handle_new_user) Trigger içinde otomatik, hatasız ve 0 gecikmeyle yapılacak!
 
-          alert("Kayıt başarılı! Lütfen giriş yapın.");
-          setIsLogin(true);
+          if (authData.session) {
+            router.push("/dashboard");
+          } else {
+            // Force sign in if session was not returned immediately
+            const { data: signInData } = await supabase.auth.signInWithPassword({
+              email,
+              password,
+            });
+            if (signInData.session) {
+              router.push("/dashboard");
+            } else {
+              alert("Kayıt başarılı! Lütfen giriş yapın.");
+              setIsLogin(true);
+            }
+          }
         }
       }
     } catch (err: any) {

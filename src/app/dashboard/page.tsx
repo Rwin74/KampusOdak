@@ -8,10 +8,118 @@ import { LogOut, Timer, Flame, Target, BookOpen, Clock, Loader2, Award, Star, Us
 
 export const dynamic = 'force-dynamic';
 
-type Profile = { id: string; full_name: string; total_hours: number; streak: number; xp?: number; role?: string };
+type Profile = { id: string; full_name: string; total_hours: number; streak: number; xp?: number; role?: string; onboarding_completed?: boolean; focus_targets?: string[]; education_level?: string; daily_goal?: string; };
 type Trivia = { id: number; category: string; question: string; options: string[]; correct_answer: string };
 type BilgiKosesi = { id: string; baslik: string; icerik: string; kategori: string; created_at: string };
 type Haberler = { id: string; baslik: string; icerik: string; link?: string; kategori: string; created_at: string };
+
+function OnboardingWizard({ profile, onComplete }: { profile: Profile; onComplete: (data: any) => void }) {
+  const [step, setStep] = useState(1);
+  const [focusTargets, setFocusTargets] = useState<string[]>([]);
+  const [educationLevel, setEducationLevel] = useState<string>("");
+  const [dailyGoal, setDailyGoal] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+
+  const focusOptions = ["YKS (TYT/AYT)", "LGS", "KPSS / DGS / ALES", "Yabancı Dil (YDS/TOEFL)", "Sadece Okuma / Genel Odak"];
+  const eduOptions = ["Lise (9, 10, 11. Sınıf)", "12. Sınıf / Sınav Senesi", "Mezun Grubu", "Üniversite Öğrencisi", "Çalışan / Profesyonel"];
+  const goalOptions = ["🥉 1-2 Saat (Isınma Turu)", "🥈 3-5 Saat (Ciddi Rekabet)", "🥇 6+ Saat (Şampiyonlar Ligi)"];
+
+  const handleNext = async () => {
+    if (step === 1 && focusTargets.length === 0) return;
+    if (step === 2 && !educationLevel) return;
+    
+    if (step === 3 && dailyGoal) {
+      setLoading(true);
+      await supabase.rpc('complete_onboarding', {
+        p_user_id: profile.id,
+        p_focus_targets: focusTargets,
+        p_education_level: educationLevel,
+        p_daily_goal: dailyGoal
+      });
+      setLoading(false);
+      onComplete({ focusTargets, educationLevel, dailyGoal });
+    } else {
+      setStep(step + 1);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[200] bg-background flex flex-col items-center justify-center p-6 overflow-hidden">
+      {/* Background Ambience */}
+      <div className="absolute top-0 w-full h-96 bg-primary/20 rounded-b-full filter blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 w-full h-96 bg-accent/20 rounded-t-full filter blur-[150px] pointer-events-none" />
+
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }} 
+        animate={{ opacity: 1, scale: 1 }} 
+        className="w-full max-w-2xl glass-panel p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl relative z-10"
+      >
+        <div className="flex items-center justify-between mb-12">
+           <h2 className="text-xl font-bold tracking-widest uppercase text-muted-foreground">Kişiselleştirme</h2>
+           <div className="flex space-x-2">
+             {[1, 2, 3].map(i => (
+               <div key={i} className={`w-3 h-3 rounded-full transition-colors duration-500 ${step >= i ? 'bg-primary shadow-[0_0_10px_rgba(245,158,11,0.5)]' : 'bg-white/10'}`} />
+             ))}
+           </div>
+        </div>
+
+        <AnimatePresence mode="wait">
+          {step === 1 && (
+            <motion.div key="step1" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} className="space-y-6">
+              <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-8 leading-tight">Neye odaklanıyorsun? <span className="block text-lg font-medium text-muted-foreground mt-2">(Birden fazla seçebilirsin)</span></h1>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {focusOptions.map(opt => (
+                  <button key={opt} onClick={() => setFocusTargets(prev => prev.includes(opt) ? prev.filter(t => t !== opt) : [...prev, opt])} className={`p-4 rounded-xl border text-left font-semibold transition-all ${focusTargets.includes(opt) ? 'bg-primary/20 border-primary text-white shadow-[0_0_15px_rgba(245,158,11,0.2)]' : 'bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10 hover:text-white'}`}>
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {step === 2 && (
+            <motion.div key="step2" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} className="space-y-6">
+              <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-8 leading-tight">Şu anki eğitim durumun nedir?</h1>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {eduOptions.map(opt => (
+                  <button key={opt} onClick={() => { setEducationLevel(opt); setTimeout(() => setStep(3), 400); }} className={`p-4 rounded-xl border text-left font-semibold transition-all ${educationLevel === opt ? 'bg-primary/20 border-primary text-white shadow-[0_0_15px_rgba(245,158,11,0.2)]' : 'bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10 hover:text-white'}`}>
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {step === 3 && (
+            <motion.div key="step3" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} className="space-y-6">
+              <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-8 leading-tight">KampüsOdak'ta günlük hedefin kaç saat?</h1>
+              <div className="grid grid-cols-1 gap-4">
+                {goalOptions.map(opt => (
+                  <button key={opt} onClick={() => setDailyGoal(opt)} className={`p-5 rounded-xl border text-left font-semibold transition-all text-lg ${dailyGoal === opt ? 'bg-primary/20 border-primary text-white shadow-[0_0_15px_rgba(245,158,11,0.2)]' : 'bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10 hover:text-white'}`}>
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="mt-12 flex justify-between items-center">
+          {step > 1 ? (
+             <button onClick={() => setStep(step - 1)} className="px-6 py-3 text-muted-foreground hover:text-white transition-colors font-medium">Geri</button>
+          ) : <div />}
+          <button 
+            onClick={handleNext} 
+            disabled={loading || (step === 1 && focusTargets.length === 0) || (step === 2 && !educationLevel) || (step === 3 && !dailyGoal)}
+            className="px-10 py-4 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold transition-all disabled:opacity-50 flex items-center space-x-2"
+          >
+            <span>{loading ? 'Kaydediliyor...' : (step === 3 ? 'Başla' : 'Devam Et')}</span>
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
 
 export default function Dashboard() {
   const router = useRouter();
@@ -147,6 +255,19 @@ export default function Dashboard() {
   };
 
   if (!profile) return <div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
+
+  if (profile.onboarding_completed === false) {
+    return <OnboardingWizard profile={profile} onComplete={(data) => {
+      setProfile({ ...profile, onboarding_completed: true, focus_targets: data.focusTargets, education_level: data.educationLevel, daily_goal: data.dailyGoal });
+      if (data.focusTargets && data.focusTargets.length > 0) {
+         let cat = "YKS";
+         if (data.focusTargets.join(',').includes("LGS")) cat = "LGS";
+         if (data.focusTargets.join(',').includes("KPSS")) cat = "KPSS";
+         if (data.focusTargets.join(',').includes("Yabancı Dil")) cat = "YDS/TOEFL";
+         setSelectedCategory(cat);
+      }
+    }} />;
+  }
 
   return (
     <div className="min-h-screen bg-background text-white relative flex overflow-hidden">
