@@ -125,23 +125,34 @@ export default function Home() {
             <span>Şuanlık Sadece davetiye ile</span>
           </div>
 
-          <h1 className="text-5xl lg:text-7xl font-bold tracking-tight text-foreground flex items-center gap-1">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.png"
-              alt="KampusOdak Logo"
-              style={{
-                height: '1em',
-                width: 'auto',
-                display: 'inline-block',
-                background: '#ffffff',
-                padding: '0.05em 0.1em',
-                borderRadius: '0',
-                verticalAlign: 'middle',
-              }}
-            />
-            ampus<span className="text-primary">Odak</span>
-          </h1>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              border: '2px solid rgba(255,255,255,0.18)',
+              borderRadius: '16px',
+              padding: '0.18em 0.55em 0.18em 0.3em',
+              backdropFilter: 'blur(4px)',
+              background: 'rgba(255,255,255,0.04)',
+              gap: '0.12em',
+            }}
+          >
+            <h1 className="text-5xl lg:text-7xl font-bold tracking-tight text-foreground flex items-center" style={{ margin: 0 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo.png"
+                alt="KampusOdak Logo"
+                style={{
+                  height: '0.85em',
+                  width: 'auto',
+                  display: 'inline-block',
+                  verticalAlign: 'middle',
+                  marginRight: '0.05em',
+                }}
+              />
+              ampus<span className="text-primary">Odak</span>
+            </h1>
+          </div>
           
           <p className="text-xl text-muted-foreground max-w-lg leading-relaxed">
             Yeni nesil dijital çalışma kütüphanesi. Evdeki dikkat dağıtıcıları geride bırakın ve hedeflerinize binlerce öğrenciyle birlikte kesintisiz odaklanın
