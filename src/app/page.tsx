@@ -106,9 +106,9 @@ export default function Home() {
     <main className="min-h-screen bg-background relative overflow-hidden flex flex-col justify-center items-center">
       {/* Dynamic Background */}
       <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none" />
-      <div className="absolute top-0 -left-4 w-72 h-72 bg-primary/30 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob" />
-      <div className="absolute top-0 -right-4 w-72 h-72 bg-accent/30 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-2000" />
-      <div className="absolute -bottom-8 left-20 w-72 h-72 bg-primary/20 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-4000" />
+      <div className="absolute top-0 -left-4 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-2xl opacity-40 animate-blob" />
+      <div className="absolute top-0 -right-4 w-72 h-72 bg-accent/10 rounded-full mix-blend-multiply filter blur-2xl opacity-40 animate-blob animation-delay-2000" />
+      <div className="absolute -bottom-8 left-20 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-2xl opacity-40 animate-blob animation-delay-4000" />
 
       {/* Main Content */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -120,41 +120,29 @@ export default function Home() {
           transition={{ duration: 0.8 }}
           className="space-y-8"
         >
-           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full glass-panel text-sm text-accent">
-            <Lock className="w-4 h-4" />
+          <div style={{ display:'inline-flex', alignItems:'center', gap:'6px', padding:'6px 14px', borderRadius:'999px', border:'1.5px solid #1c2e5e', background:'rgba(28,46,94,0.07)', color:'#1c2e5e', fontSize:'0.875rem', fontWeight:500 }}>
+            <Lock style={{ width:'14px', height:'14px' }} />
             <span>Şuanlık Sadece davetiye ile</span>
           </div>
 
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              border: '2.5px solid rgba(255,255,255,0.75)',
-              borderRadius: '16px',
-              padding: '0.18em 0.55em 0.18em 0.3em',
-              background: '#ffffff',
-              gap: '0.12em',
-            }}
-          >
-            <h1 className="text-5xl lg:text-7xl font-bold tracking-tight flex items-center" style={{ margin: 0, color: '#1c2e5e' }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/logo.png"
-                alt="KampusOdak Logo"
-                style={{
-                  height: '0.85em',
-                  width: 'auto',
-                  display: 'inline-block',
-                  verticalAlign: 'middle',
-                  marginLeft: '0.3em',
-                  marginRight: '0.08em',
-                }}
-              />
-              ampus<span style={{ color: '#f59e0b' }}>Odak</span>
-            </h1>
-          </div>
+          <h1 className="text-5xl lg:text-7xl font-bold tracking-tight flex items-center" style={{ color: '#1c2e5e' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="KampusOdak Logo"
+              style={{
+                height: '0.85em',
+                width: 'auto',
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                marginLeft: '0',
+                marginRight: '0.08em',
+              }}
+            />
+            ampus<span style={{ color: '#f59e0b' }}>Odak</span>
+          </h1>
           
-          <p className="text-xl text-muted-foreground max-w-lg leading-relaxed">
+          <p className="text-xl max-w-lg leading-relaxed" style={{ color: '#1c2e5e' }}>
             Yeni nesil dijital çalışma kütüphanesi. Evdeki dikkat dağıtıcıları geride bırakın ve hedeflerinize binlerce öğrenciyle birlikte kesintisiz odaklanın
           </p>
 
@@ -184,17 +172,17 @@ export default function Home() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {!isLogin && (
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground/80">Davetiye / Kurum Kodu</label>
+                <label className="text-sm font-medium text-white">Davetiye / Kurum Kodu</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-primary/60" />
+                    <Lock className="h-5 w-5 text-primary" />
                   </div>
                   <input 
                     type="text" 
                     required 
                     value={inviteCode}
                     onChange={(e) => setInviteCode(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-background/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-white placeholder-white/30 uppercase tracking-widest"
+                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/25 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-white placeholder-white/60 uppercase tracking-widest"
                     placeholder="KURUM-V123 VEYA XYZ-123-ABC"
                   />
                 </div>
@@ -202,25 +190,25 @@ export default function Home() {
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground/80">E-posta Adresi</label>
+              <label className="text-sm font-medium text-white">E-posta Adresi</label>
               <input 
                 type="email" 
                 required 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-background/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-white placeholder-white/30"
+                className="w-full px-4 py-3 bg-white/10 border border-white/25 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-white placeholder-white/60"
                 placeholder="isim@universite.edu.tr"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground/80">Şifre</label>
+              <label className="text-sm font-medium text-white">Şifre</label>
               <input 
                 type="password" 
                 required 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-background/50 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-white placeholder-white/30"
+                className="w-full px-4 py-3 bg-white/10 border border-white/25 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-white placeholder-white/60"
                 placeholder="••••••••"
               />
             </div>
@@ -238,7 +226,7 @@ export default function Home() {
           <div className="mt-6 text-center">
             <button 
               onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-muted-foreground hover:text-white transition-colors"
+              className="text-sm text-white/70 hover:text-white transition-colors"
             >
               {isLogin ? "Davetiyeniz var mı? Kayıt Olun" : "Zaten üye misiniz? Giriş Yapın"}
             </button>

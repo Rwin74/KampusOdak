@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0F172A", // Deep Navy
+        background: "#F5F4F0", // Off-White / Kirli Beyaz
         foreground: "#F8FAFC", // Ice White
         primary: {
           DEFAULT: "#F59E0B", // Brand Amber
@@ -44,7 +44,7 @@ const config: Config = {
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-grid": "linear-gradient(to right, #1E293B 1px, transparent 1px), linear-gradient(to bottom, #1E293B 1px, transparent 1px)",
+        "gradient-grid": "linear-gradient(to right, #c8c8c8 1px, transparent 1px), linear-gradient(to bottom, #c8c8c8 1px, transparent 1px)",
       },
       animation: {
         "blob": "blob 7s infinite",
