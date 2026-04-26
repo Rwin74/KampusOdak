@@ -13,7 +13,7 @@ import ChatPanel from "@/components/room/ChatPanel";
 
 export const dynamic = 'force-dynamic';
 
-const playNotifySound = () => {
+const playNotifySound = (type: 'tick' | 'alert' | 'boom' = 'alert') => {
     try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
@@ -21,16 +21,36 @@ const playNotifySound = () => {
         const ctx = new AudioContext();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(880, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.1); 
-        gain.gain.setValueAtTime(0, ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.05);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.3);
+
+        if (type === 'alert') {
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.1); 
+            gain.gain.setValueAtTime(0, ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.3);
+        } else if (type === 'tick') {
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(1200, ctx.currentTime);
+            gain.gain.setValueAtTime(0, ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.1);
+        } else if (type === 'boom') {
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(150, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.5);
+            gain.gain.setValueAtTime(0, ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.5);
+        }
     } catch {}
 };
 
@@ -188,7 +208,8 @@ function TracksRenderer({ isWhiteboardOpen, fullscreenId, setFullscreenId }: { i
     const videoTracks = useTracks([Track.Source.Camera]);
 
     return (
-        <motion.div layout className={`flex w-full h-full relative z-30 ${isWhiteboardOpen ? 'gap-2 sm:gap-4 md:gap-[140px] h-[100px] md:h-[160px] justify-center items-start mb-6 mt-4' : 'flex-col md:flex-row gap-1 sm:gap-2 md:gap-6 flex-1 items-center justify-center'}`}>
+    return (
+        <motion.div layout className={`flex w-full h-full relative z-30 ${isWhiteboardOpen ? 'gap-2 sm:gap-4 md:gap-[140px] h-[100px] md:h-[160px] justify-center items-start mb-6 mt-4 overflow-x-auto' : 'flex-row flex-wrap content-center overflow-y-auto gap-2 sm:gap-4 md:gap-6 flex-1 items-center justify-center p-2 md:p-4'}`}>
              <AnimatePresence>
              {videoTracks.map((track) => {
                  const isFullscreen = fullscreenId === track.participant.identity;
@@ -206,7 +227,7 @@ function TracksRenderer({ isWhiteboardOpen, fullscreenId, setFullscreenId }: { i
                     className={`relative overflow-hidden glass-panel border border-white/10 bg-zinc-900/50 shadow-2xl group transition-all duration-300 cursor-pointer ${
                         isFullscreen ? 'absolute inset-0 z-[60] rounded-xl sm:rounded-2xl md:rounded-[3rem] m-0' : (
                             hidden ? 'hidden' : (
-                                isWhiteboardOpen ? 'rounded-2xl sm:rounded-3xl md:rounded-[2rem] w-1/2 md:w-[284px] h-full md:h-[160px]' : 'rounded-2xl sm:rounded-3xl md:rounded-[2rem] flex-1 basis-0 min-h-0 w-full md:h-auto md:w-full md:aspect-video md:max-w-3xl'
+                                isWhiteboardOpen ? 'rounded-2xl sm:rounded-3xl md:rounded-[2rem] min-w-[140px] w-1/2 md:w-[284px] h-full md:h-[160px]' : 'rounded-2xl sm:rounded-3xl md:rounded-[2rem] flex-1 basis-auto min-w-[280px] min-h-[160px] md:h-auto md:w-auto md:aspect-video md:max-w-3xl'
                             )
                         )
                     }`}>
@@ -236,17 +257,67 @@ function TracksRenderer({ isWhiteboardOpen, fullscreenId, setFullscreenId }: { i
 function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard, toggleChat, isChatOpen, leaveRoom, cellId, category, isFullscreen }: any) {
   const room = useRoomContext();
   const { localParticipant } = useLocalParticipant();
+  const [phase, setPhase] = useState<'ready_room' | 'countdown' | 'focused'>('ready_room');
+  const [countdownVal, setCountdownVal] = useState(3);
+  const [readyStates, setReadyStates] = useState<Record<string, boolean>>({});
+
   const [timeLeft, setTimeLeft] = useState(duration * 60);
   const [micTimer, setMicTimer] = useState<number | null>(null);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const [toastMsg, setToastMsg] = useState<{text: string, action?: () => void} | null>(null);
 
+  const remoteParticipants = Array.from(room?.participants.values() || []);
+  const allParticipants = room?.localParticipant ? [room.localParticipant, ...remoteParticipants] : [];
+
   useEffect(() => {
      if (isChatOpen) setUnreadChatCount(0);
   }, [isChatOpen]);
 
+  // Consensus Logic
+  useEffect(() => {
+      if (phase === 'ready_room') {
+          const localReady = readyStates[room?.localParticipant?.identity || ''];
+          if (!localReady) return;
+          const allReady = allParticipants.length > 0 && allParticipants.every(p => readyStates[p.identity]);
+          if (allReady) {
+              setPhase('countdown');
+              setCountdownVal(3);
+              playNotifySound('alert');
+          }
+      }
+  }, [readyStates, allParticipants.length, phase, room]);
+
+  // Countdown logic
+  useEffect(() => {
+      if (phase === 'countdown') {
+          if (countdownVal > 0) {
+              const t = setTimeout(() => {
+                  setCountdownVal(prev => prev - 1);
+                  if (countdownVal > 1) playNotifySound('tick');
+              }, 1000);
+              return () => clearTimeout(t);
+          } else {
+              setPhase('focused');
+              playNotifySound('boom');
+          }
+      }
+  }, [phase, countdownVal]);
+
+  // Ready Room 60s timeout
+  useEffect(() => {
+      if (phase === 'ready_room') {
+          const t = setTimeout(() => {
+              if (phase === 'ready_room') {
+                  leaveRoom(); // Kick if not started in 60s
+              }
+          }, 60000);
+          return () => clearTimeout(t);
+      }
+  }, [phase, leaveRoom]);
+
   // Focus Timer Logic
   useEffect(() => {
+    if (phase !== 'focused') return;
     const interval = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -258,7 +329,23 @@ function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard,
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [onTimerEnd]);
+  }, [phase, onTimerEnd]);
+
+  // Late Joiner Sync
+  useEffect(() => {
+      if (!room) return;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const onParticipantConnected = (participant: any) => {
+          const enc = new TextEncoder();
+          room.localParticipant.publishData(enc.encode(JSON.stringify({ 
+              type: 'SYNC_STATE', 
+              isReady: readyStates[room.localParticipant.identity] || false,
+              phase: phase
+          })), { reliable: true, destinationIdentities: [participant.identity] });
+      };
+      room.on('participantConnected', onParticipantConnected);
+      return () => { room.off('participantConnected', onParticipantConnected); };
+  }, [room, phase, readyStates]);
 
   // Data Channel Communication
   useEffect(() => {
@@ -268,8 +355,18 @@ function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard,
          const str = new TextDecoder().decode(payload);
          try {
              const data = JSON.parse(str);
-             if (data.type === 'ASK_MIC') {
-                 playNotifySound();
+             if (data.type === 'I_AM_READY') {
+                 setReadyStates(prev => ({...prev, [participant.identity]: true}));
+                 if (phase === 'ready_room') playNotifySound('alert');
+             } else if (data.type === 'SYNC_STATE') {
+                 if (data.isReady) {
+                     setReadyStates(prev => ({...prev, [participant.identity]: true}));
+                 }
+                 if (data.phase === 'focused' || data.phase === 'countdown') {
+                     setPhase('focused'); // Fast forward
+                 }
+             } else if (data.type === 'ASK_MIC') {
+                 playNotifySound('alert');
                  setToastMsg({ text: `${participant?.name || 'Partner'} mikrofon izni istiyor.`, action: () => {
                          const enc = new TextEncoder();
                          room.localParticipant.publishData(enc.encode(JSON.stringify({ type: 'GRANT_MIC' })), { reliable: true });
@@ -280,7 +377,7 @@ function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard,
                  localParticipant.setMicrophoneEnabled(true);
                  setMicTimer(30);
              } else if (data.type === 'REQUEST_BREAK') {
-                 playNotifySound();
+                 playNotifySound('alert');
                  setToastMsg({ text: `Partner mola teklif ediyor. Onaylıyor musun?`, action: () => {
                          const enc = new TextEncoder();
                          room.localParticipant.publishData(enc.encode(JSON.stringify({ type: 'ACCEPT_BREAK' })), { reliable: true });
@@ -293,14 +390,14 @@ function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard,
              } else if (data.type === 'CHAT_MSG') {
                  if (!isChatOpen) {
                      setUnreadChatCount(prev => prev + 1);
-                     playNotifySound();
+                     playNotifySound('alert');
                  }
              }
          } catch { }
      };
      room.on('dataReceived', handleData);
      return () => { room.off('dataReceived', handleData); };
-  }, [room, localParticipant, onTimerEnd, isChatOpen]);
+  }, [room, localParticipant, onTimerEnd, isChatOpen, phase]);
 
   useEffect(() => {
       if (micTimer !== null && micTimer > 0) {
@@ -324,10 +421,65 @@ function RoomManager({ duration, onTimerEnd, isWhiteboardOpen, toggleWhiteboard,
       room.localParticipant.publishData(enc.encode(JSON.stringify({ type: 'REQUEST_BREAK'})), { reliable: true });
   };
 
+  const handleReadyClick = () => {
+      if (!room?.localParticipant) return;
+      setReadyStates(prev => ({...prev, [room.localParticipant.identity]: true}));
+      const enc = new TextEncoder();
+      room.localParticipant.publishData(enc.encode(JSON.stringify({ type: 'I_AM_READY' })), { reliable: true });
+  };
+
   const currentDurationFormatted = `${Math.floor(timeLeft / 60).toString().padStart(2, '0')}:${(timeLeft % 60).toString().padStart(2, '0')}`;
 
   return (
       <>
+        {/* Ready Room & Countdown Overlays */}
+        <AnimatePresence>
+            {phase === 'ready_room' && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-[100] bg-black/80 backdrop-blur-md flex flex-col items-center justify-center p-6">
+                    <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-8 tracking-widest uppercase text-center drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">Hazır mısın?</h2>
+                    
+                    {!readyStates[room?.localParticipant?.identity || ''] ? (
+                        <button 
+                            onClick={handleReadyClick}
+                            className="px-12 md:px-16 py-6 md:py-8 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white font-black text-2xl md:text-4xl rounded-full shadow-[0_0_50px_rgba(34,197,94,0.6)] transform transition-all hover:scale-110 active:scale-95"
+                        >
+                            HAZIRIM
+                        </button>
+                    ) : (
+                        <div className="px-12 md:px-16 py-6 md:py-8 bg-white/10 text-white font-black text-2xl md:text-4xl rounded-full border border-white/20 opacity-80 flex items-center space-x-3">
+                            <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+                            <span>BEKLENİYOR...</span>
+                        </div>
+                    )}
+
+                    <div className="mt-12 flex flex-col items-center space-y-3 bg-zinc-900/50 p-6 rounded-2xl border border-white/10 min-w-[300px]">
+                        {allParticipants.map(p => (
+                            <div key={p.identity} className="flex items-center justify-between w-full text-sm md:text-base border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                                <span className="font-bold tracking-wider">{p.name || p.identity}</span>
+                                <span className={`font-black uppercase tracking-widest ${readyStates[p.identity] ? 'text-green-400' : 'text-yellow-400 animate-pulse'}`}>
+                                    {readyStates[p.identity] ? 'HAZIR' : 'Bekleniyor...'}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </motion.div>
+            )}
+
+            {phase === 'countdown' && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center">
+                    <motion.div 
+                        key={countdownVal}
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.5 }}
+                        className="text-[150px] md:text-[250px] font-black text-white drop-shadow-[0_0_100px_rgba(255,255,255,1)]"
+                    >
+                        {countdownVal}
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+
         {/* Neon Central Timer Layout V2 */}
         <motion.div layout className={`absolute transition-all duration-700 z-[70] left-1/2 -translate-x-1/2 ${isFullscreen ? 'top-4 md:top-6 scale-50 sm:scale-75 md:scale-[0.8] origin-top' : (isWhiteboardOpen ? 'top-2 md:top-6 scale-50 sm:scale-75 md:scale-[0.65] origin-top' : 'top-1/2 -translate-y-1/2 md:top-10 md:translate-y-0 scale-75 sm:scale-100 origin-center md:origin-top')}`}>
           <div className="flex flex-col items-center justify-center p-[2px] rounded-full bg-gradient-to-r from-accent via-primary to-accent shadow-[0_0_20px_rgba(139,92,246,0.3)] md:shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_50px_rgba(236,72,153,0.5)] transition-shadow">
@@ -573,6 +725,8 @@ function RoomContent() {
                  token={token} 
                  serverUrl={liveKitUrl} 
                  options={{ 
+                     adaptiveStream: true,
+                     publishDefaults: { simulcast: true },
                      videoCaptureDefaults: { deviceId: selectedCameraId },
                      audioCaptureDefaults: { deviceId: selectedMicId }
                  }}
