@@ -125,8 +125,22 @@ export default function Home() {
             <span>Şuanlık Sadece davetiye ile</span>
           </div>
 
-          <h1 className="text-5xl lg:text-7xl font-bold tracking-tight text-foreground">
-            Kampus<span className="text-primary">Odak</span>
+          <h1 className="text-5xl lg:text-7xl font-bold tracking-tight text-foreground flex items-center gap-1">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="KampusOdak Logo"
+              style={{
+                height: '1em',
+                width: 'auto',
+                display: 'inline-block',
+                background: '#ffffff',
+                padding: '0.05em 0.1em',
+                borderRadius: '0',
+                verticalAlign: 'middle',
+              }}
+            />
+            ampus<span className="text-primary">Odak</span>
           </h1>
           
           <p className="text-xl text-muted-foreground max-w-lg leading-relaxed">
