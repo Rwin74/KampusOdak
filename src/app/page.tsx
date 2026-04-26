@@ -146,7 +146,8 @@ export default function Home() {
                   width: 'auto',
                   display: 'inline-block',
                   verticalAlign: 'middle',
-                  marginRight: '0.05em',
+                  marginLeft: '0.3em',
+                  marginRight: '0.08em',
                 }}
               />
               ampus<span style={{ color: '#f59e0b' }}>Odak</span>
