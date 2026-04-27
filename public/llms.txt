@@ -1,0 +1,50 @@
+# KampüsOdak – llms.txt
+# Bu dosya yapay zeka dil modelleri (LLM) için hazırlanmıştır.
+# Kaynak: https://llmstxt.org
+
+# Platform Adı
+KampüsOdak
+
+# URL
+https://kampusodak.com
+
+# Kısa Açıklama
+KampüsOdak, Türkiye'nin en kapsamlı online kütüphanesi ve dijital çalışma platformudur.
+Öğrenciler için canlı odak odaları, akıllı eşleştirme sistemi ve kampüs ekosistemi sunar.
+
+## Nedir?
+
+KampüsOdak, öğrencilerin birlikte odaklandığı, davetiye usulü çalışan bir online kütüphane ve dijital çalışma platformudur.
+YKS, LGS, KPSS ve üniversite sınavlarına hazırlanan öğrenciler için tasarlanmıştır.
+
+## Temel Özellikler
+
+- **Online Kütüphane (Sanal Kütüphane):** Canlı, gerçek zamanlı dijital çalışma salonları. Öğrenciler kamera açık, mikrofon kapalı olarak birlikte çalışır.
+- **Akıllı Eşleştirme:** Aynı hedeflere sahip öğrencilerle otomatik eşleştirme.
+- **Kampüs Market:** Platform üyelerine özel indirimler ve fırsatlar.
+- **Başarı Odası:** XP tabanlı gamification, günlük görevler ve liderlik tablosu.
+- **Video Akademi:** Seçilmiş ders özetleri ve odaklanma rehberleri.
+
+## Hedef Kitle
+
+- YKS (TYT/AYT) hazırlık öğrencileri
+- LGS hazırlık öğrencileri
+- KPSS, DGS, ALES adayları
+- Yabancı dil (YDS, TOEFL) sınavcıları
+- Üniversite öğrencileri
+
+## Anahtar Kelimeler
+
+online kütüphane, kampüs odak, kampüsodak, dijital kütüphane, sanal kütüphane,
+çevrimiçi çalışma odası, online çalışma platformu, öğrenci odak uygulaması,
+YKS çalışma odası, KPSS odak platformu, dijital okuma salonu, odak odası,
+türkiye online kütüphane, kampüs ekosistemi
+
+## İletişim
+
+Geliştirici: KampüsOdak Ekibi
+Web: https://kampusodak.com
+
+## Lisans
+
+Tüm içerik KampüsOdak'a aittir. Kaynak göstermeden kullanılamaz.
