@@ -103,12 +103,12 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-background relative overflow-hidden flex flex-col justify-center items-center">
+    <main className="min-h-screen relative overflow-hidden flex flex-col justify-center items-center" style={{ backgroundColor: '#F5F4F0' }}>
       {/* Dynamic Background */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none" />
-      <div className="absolute top-0 -left-4 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-2xl opacity-40 animate-blob" />
-      <div className="absolute top-0 -right-4 w-72 h-72 bg-accent/10 rounded-full mix-blend-multiply filter blur-2xl opacity-40 animate-blob animation-delay-2000" />
-      <div className="absolute -bottom-8 left-20 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-2xl opacity-40 animate-blob animation-delay-4000" />
+      <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none" />
+      <div className="absolute top-0 -left-4 w-72 h-72 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob" style={{ backgroundColor: '#f59e0b33' }} />
+      <div className="absolute top-0 -right-4 w-72 h-72 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-2000" style={{ backgroundColor: '#6366f133' }} />
+      <div className="absolute -bottom-8 left-20 w-72 h-72 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-4000" style={{ backgroundColor: '#f59e0b22' }} />
 
       {/* Main Content */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">

@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#F5F4F0", // Off-White / Kirli Beyaz
+        background: "#0F172A", // Deep Navy (Dashboard)
         foreground: "#F8FAFC", // Ice White
         primary: {
           DEFAULT: "#F59E0B", // Brand Amber
